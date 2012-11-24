@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Users\radleta\Dropbox\Frappe\Frappe.Tests\bin\Debug\Frappe.Tests.dll" total="5" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-11-24" time="10:53:57">
+  <environment nunit-version="2.5.10.11092" clr-version="2.0.50727.5466" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Users\radleta\Dropbox\Frappe" machine-name="PHLSP090ADLETA" user="radleta" user-domain="BEYOND1" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="C:\Users\radleta\Dropbox\Frappe\Frappe.Tests\bin\Debug\Frappe.Tests.dll" executed="True" result="Success" success="True" time="0.953" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="Frappe" executed="True" result="Success" success="True" time="0.943" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="BundlerTestFixture" executed="True" result="Success" success="True" time="0.772" asserts="0">
+            <results>
+              <test-case name="Frappe.BundlerTestFixture.GetFilesTest" executed="True" result="Success" success="True" time="0.762" asserts="2" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="BundleTestFixture" executed="True" result="Success" success="True" time="0.006" asserts="0">
+            <results>
+              <test-case name="Frappe.BundleTestFixture.LoadTest" executed="True" result="Success" success="True" time="0.005" asserts="7" />
+            </results>
+          </test-suite>
+          <test-suite type="Namespace" name="Css" executed="True" result="Success" success="True" time="0.153" asserts="0">
+            <results>
+              <test-suite type="TestFixture" name="CssParserTestFixture" executed="True" result="Success" success="True" time="0.153" asserts="0">
+                <results>
+                  <test-case name="Frappe.Css.CssParserTestFixture.GetCssTest" executed="True" result="Success" success="True" time="0.091" asserts="18" />
+                  <test-case name="Frappe.Css.CssParserTestFixture.GetFileImportsTest" executed="True" result="Success" success="True" time="0.003" asserts="6" />
+                  <test-case name="Frappe.Css.CssParserTestFixture.UpdateRelativePathsTest" executed="True" result="Success" success="True" time="0.055" asserts="2" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

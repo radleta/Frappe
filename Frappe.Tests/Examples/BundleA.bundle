@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Bundle>
+  <Include File="foo.css" />
+  <Include File="goo.css" />
+  <Bundle File="SubFolder\BundleB.bundle" />
+</Bundle>

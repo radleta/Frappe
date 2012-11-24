@@ -1,0 +1,72 @@
+﻿.http-image
+{
+    background-image: url("http://www.google.com/some/path/double-quote.jpg");
+}
+.https-image
+{
+    background-image: url("https://www.google.com/some/path/double-quote.jpg");
+}
+.file-only
+{
+    background-image: url("double-quote.jpg");
+}
+.relative-sub
+{
+    background-image: url("Images/double-quote.jpg");
+}
+.parent
+{
+    background-image: url("../double-quote.jpg");
+}
+.parent-sub
+{
+    background-image: url("../Images/double-quote.jpg");
+}
+.http-image-single-quote
+{
+    background-image: url('http://www.google.com/some/path/single-quote.jpg');
+}
+.https-image-single-quote
+{
+    background-image: url('https://www.google.com/some/path/single-quote.jpg');
+}
+.file-only-single-quote
+{
+    background-image: url('single-quote.jpg');
+}
+.relative-sub-single-quote
+{
+    background-image: url('Images/single-quote.jpg');
+}
+.parent-single-quote
+{
+    background-image: url('../single-quote.jpg');
+}
+.parent-sub-single-quote
+{
+    background-image: url('../Images/single-quote.jpg');
+}
+.http-image-no-quote
+{
+    background-image: url(http://www.google.com/some/path/no-quote.jpg);
+}
+.https-image-no-quote
+{
+    background-image: url(https://www.google.com/some/path/no-quote.jpg);
+}
+.file-only-no-quote
+{
+    background-image: url(no-quote.jpg);
+}
+.relative-sub-no-quote
+{
+    background-image: url(Images/no-quote.jpg);
+}
+.parent-no-quote
+{
+    background-image: url(../no-quote.jpg);
+}
+.parent-sub-no-quote
+{
+    background-image: url(../Images/no-quote.jpg);
+}

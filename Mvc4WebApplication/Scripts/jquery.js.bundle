@@ -1,0 +1,4 @@
+﻿<Bundle>
+	<Include File="jquery-1.6.2.js" />
+	<Include File="jquery-ui-1.8.11.min.js" />
+</Bundle>

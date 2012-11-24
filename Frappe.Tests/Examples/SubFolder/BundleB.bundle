@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Bundle>
+  <Include File="too.css" />
+  <Include File="new.css" />
+  <Include File="chew.css" />
+  <!-- goo.css is a dup from BundleA.bundle -->
+  <Include File="..\goo.css" />
+</Bundle>

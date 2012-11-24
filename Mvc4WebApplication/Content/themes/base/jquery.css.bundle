@@ -1,0 +1,4 @@
+﻿<Bundle>
+	<Include File="jquery.ui.all.css" />
+  <Include File="test.min.css" />
+</Bundle>

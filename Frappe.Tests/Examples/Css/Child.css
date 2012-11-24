@@ -1,0 +1,5 @@
+﻿@import "SubFolder\SubFolderChild.css";
+.child
+{
+    color: #fff;
+}
