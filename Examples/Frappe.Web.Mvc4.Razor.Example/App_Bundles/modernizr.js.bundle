@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Bundle>
+  <Include File="..\Scripts\modernizr-2.5.3.js" />
+</Bundle>

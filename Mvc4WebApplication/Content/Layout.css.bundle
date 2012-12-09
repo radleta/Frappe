@@ -1,5 +1,0 @@
-﻿<Bundle>
-  <Bundle File="themes\base\jquery.css.bundle" />
-  <Include File="Widget.less" />
-  <Include File="Site.css" />
-</Bundle>

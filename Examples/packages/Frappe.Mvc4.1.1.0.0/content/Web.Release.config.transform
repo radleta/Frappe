@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <applicationSettings>
+    <Frappe.Settings>
+      <setting name="BundleOutput" serializeAs="String" xdt:Transform="Replace" xdt:Locator="Match(name)">
+        <value>True</value>
+      </setting>
+      <!-- TODO: Uncomment this and configure it for your production environment
+      <setting name="CdnHostName" serializeAs="String" xdt:Transform="Replace" xdt:Locator="Match(name)">
+        <value />
+      </setting>
+      -->
+    </Frappe.Settings>
+  </applicationSettings>
+</configuration>

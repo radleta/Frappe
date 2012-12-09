@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Bundle>
+  <Include File="..\Content\themes\base\jquery.ui.all.css" />
+  <Include File="..\Content\Site.css" />
+</Bundle>

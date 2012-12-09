@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Bundle>
+  <Include File="..\Scripts\jquery-1.7.1.js" />
+  <Include File="..\Scripts\jquery-ui-1.8.20.js" />
+  <Include File="..\Scripts\jquery.validate.js" />
+  <Include File="..\Scripts\jquery.validate.unobtrusive.js" />  
+  <Include File="..\Scripts\knockout-2.1.0.js" />
+</Bundle>

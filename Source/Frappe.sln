@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5986C004-2BC8-4996-A2DE-8DD134E4E514}"
+	ProjectSection(SolutionItems) = preProject
+		Frappe.proj = Frappe.proj
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{402BA3B5-09FF-4E0B-BFAF-C78549B7223E}"
+	ProjectSection(SolutionItems) = preProject
+		README.txt = README.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe", "Frappe\Frappe.csproj", "{01C7A6F0-8DE0-4332-8DD3-0FDE5F27892F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe.Tests", "Frappe.Tests\Frappe.Tests.csproj", "{7D9EDBC7-00A5-4A9B-8E3E-8822DEE255B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe.MSBuild", "Frappe.MSBuild\Frappe.MSBuild.csproj", "{477196D5-A2BB-4460-A64E-79FC4FB6F9EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe.Mvc4", "Frappe.Mvc4\Frappe.Mvc4.csproj", "{512D47FD-0351-43AB-AC45-61040AE9B07D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01C7A6F0-8DE0-4332-8DD3-0FDE5F27892F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01C7A6F0-8DE0-4332-8DD3-0FDE5F27892F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01C7A6F0-8DE0-4332-8DD3-0FDE5F27892F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01C7A6F0-8DE0-4332-8DD3-0FDE5F27892F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D9EDBC7-00A5-4A9B-8E3E-8822DEE255B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D9EDBC7-00A5-4A9B-8E3E-8822DEE255B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D9EDBC7-00A5-4A9B-8E3E-8822DEE255B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D9EDBC7-00A5-4A9B-8E3E-8822DEE255B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{477196D5-A2BB-4460-A64E-79FC4FB6F9EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{477196D5-A2BB-4460-A64E-79FC4FB6F9EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{477196D5-A2BB-4460-A64E-79FC4FB6F9EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{477196D5-A2BB-4460-A64E-79FC4FB6F9EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{512D47FD-0351-43AB-AC45-61040AE9B07D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{512D47FD-0351-43AB-AC45-61040AE9B07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{512D47FD-0351-43AB-AC45-61040AE9B07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{512D47FD-0351-43AB-AC45-61040AE9B07D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
