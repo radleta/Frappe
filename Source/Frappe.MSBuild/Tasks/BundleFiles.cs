@@ -50,6 +50,7 @@ namespace Frappe.Tasks
             bundler.ImportFileNotFound += bundler_ImportFileNotFound;
             bundler.FileBundled += bundler_FileBundled;
             bundler.Bundle(File, Overwrite, files.Select(f => f.FullName));
+            Log.LogMessage("Bundle output file \"{0}\" created.", File);
             return true;
         }
 
@@ -59,7 +60,7 @@ namespace Frappe.Tasks
         void bundler_FileBundled(Bundler sender, string outputFile, string file)
         {
             // log message for msbuild
-            Log.LogMessage("Appended file \"{0}\" to \"{1}\".", file, outputFile);
+            Log.LogMessage(MessageImportance.Low, "Appended file \"{0}\" to \"{1}\".", file, outputFile);
         }
 
         /// <summary>

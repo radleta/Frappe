@@ -5,4 +5,5 @@
   <Include File="..\Scripts\jquery.validate.js" />
   <Include File="..\Scripts\jquery.validate.unobtrusive.js" />  
   <Include File="..\Scripts\knockout-2.1.0.js" />
+  
 </Bundle>

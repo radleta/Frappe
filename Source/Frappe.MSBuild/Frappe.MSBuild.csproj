@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Tasks\AppendFiles.cs" />
     <Compile Include="Tasks\BundleFiles.cs" />
+    <Compile Include="Tasks\CopyMostRecentCreationAndLastWriteTimeToFiles.cs" />
     <Compile Include="Tasks\GetFilesFromBundle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

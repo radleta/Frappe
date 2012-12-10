@@ -55,7 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Web.Release.config.transform" />
-    <None Include="Frappe.Mvc4.nuspec" />
+    <None Include="Frappe.Mvc4.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Web.config.transform" />
     <None Include="Web.config.transform" />
   </ItemGroup>

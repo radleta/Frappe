@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Frappe.Mvc4</id>
+    <version>1.2.0.0</version>
+    <title>Frappe.Mvc4</title>
+    <authors>Richard Adleta</authors>
+    <owners>Richard Adleta</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://radleta.github.com/Frappe</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The ASP.NET MVC 4 integration with Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</description>
+    <releaseNotes>The initial release candidate.</releaseNotes>
+    <copyright>Copyright 2012 Richard Adleta</copyright>
+    <tags>asp-net mvc mvc-4 css js less bundle bundler</tags>
+    <dependencies>
+      <dependency id="Frappe.MSBuild" />
+    </dependencies>
+  </metadata>
+</package>

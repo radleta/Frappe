@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="CreateBundles" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask TaskName="Frappe.Tasks.GetFilesFromBundle" AssemblyFile="$(MSBuildThisFileDirectory)Frappe.MSBuild.dll" />
   <UsingTask TaskName="Frappe.Tasks.BundleFiles" AssemblyFile="$(MSBuildThisFileDirectory)Frappe.MSBuild.dll" />
+  <UsingTask TaskName="Frappe.Tasks.CopyMostRecentCreationAndLastWriteTimeToFiles" AssemblyFile="$(MSBuildThisFileDirectory)Frappe.MSBuild.dll" />
   <UsingTask TaskName="AjaxMin" AssemblyFile="$(MSBuildThisFileDirectory)AjaxMin\AjaxMinTask.dll" />
   <PropertyGroup>
     <FrappeDebug>false</FrappeDebug>
@@ -13,7 +14,7 @@
         <OutputFile>$([System.Text.RegularExpressions.Regex]::Replace(%(Identity),'(.+?)(\.js|\.css)\.bundle$','$1.min$2', System.Text.RegularExpressions.RegexOptions.IgnoreCase))</OutputFile>
       </BundleFiles>
     </ItemGroup>
-    <Message Condition="'$(FrappeDebug)'=='true'" Text="Creating &quot;%(BundleFiles.OutputFile)&quot; from bundle &quot;%(BundleFiles.Identity)&quot;." />
+    <Message Text="Ensuring bundle &quot;%(BundleFiles.Identity)&quot; is up-to-date." />
     <MSBuild Condition="Exists('%(BundleFiles.Identity)')" Projects="$(MSBuildProjectFullPath)" Targets="CompileBundle" Properties="BundleFile=%(BundleFiles.Identity);OutputFile=%(BundleFiles.OutputFile)" />
   </Target>
   <Target Name="TransformBundle" Inputs="@(ImportFiles);@(CssFiles);@(JavaScriptFiles);$(BundleFile)" Outputs="$(OutputFile)" DependsOnTargets="ReadBundle;TransformCssIncludeFiles;TransformJavaScriptIncludeFiles">
@@ -30,6 +31,7 @@
   </Target>
   <Target Name="CompileBundle" Inputs="@(ImportFiles);@(BundleContentFiles);$(BundleFile)" Outputs="$(OutputFile)" DependsOnTargets="TransformBundle">
     <Frappe.Tasks.BundleFiles File="$(OutputFile)" Overwrite="true" Inputs="@(BundleContentFiles)" />
+    <Frappe.Tasks.CopyMostRecentCreationAndLastWriteTimeToFiles FromFiles="@(BundleContentFiles);$(BundleFile)" ToFiles="$(OutputFile)" />
   </Target>
   <Target Name="ReadBundle">
     <Message Condition="'$(FrappeDebug)'=='true'" Text="Loading bundle includes from &quot;$(BundleFile)&quot;." />
@@ -63,12 +65,15 @@
     <Message Condition="'$(FrappeDebug)'=='true'" Text="CssFiles: %(CssFiles.Identity)" />
     <Message Condition="'$(FrappeDebug)'=='true'" Text="OutputFile: %(CssFiles.OutputFile)" />
     <Exec Condition="'%(CssFiles.FileType)' == 'less'" Command="&quot;$(MSBuildThisFileDirectory)dotLess\dotless.compiler.exe&quot; &quot;%(CssFiles.Identity)&quot; &quot;%(CssFiles.CssInputFile)&quot;" />
+    <Frappe.Tasks.CopyMostRecentCreationAndLastWriteTimeToFiles Condition="'%(CssFiles.FileType)' == 'less'" FromFiles="%(CssFiles.Identity)" ToFiles="%(CssFiles.CssInputFile)" />
     <AjaxMin CssSourceFiles="%(CssFiles.CssInputFile)" CssSourceExtensionPattern="\.css$" CssTargetExtension=".min.css" />
+    <Frappe.Tasks.CopyMostRecentCreationAndLastWriteTimeToFiles FromFiles="%(CssFiles.CssInputFile)" ToFiles="%(CssFiles.OutputFile)" />
   </Target>
   <Target Name="TransformJavaScriptIncludeFiles" Inputs="%(JavaScriptFiles.Identity)" Outputs="%(JavaScriptFiles.OutputFile)">
     <Message Condition="'$(FrappeDebug)'=='true'" Text="Minify js!" />
     <Message Condition="'$(FrappeDebug)'=='true'" Text="JavaScriptFiles: %(JavaScriptFiles.Identity)" />
     <Message Condition="'$(FrappeDebug)'=='true'" Text="OutputFile: %(JavaScriptFiles.OutputFile)" />
     <AjaxMin JsSourceFiles="%(JavaScriptFiles.Identity)" JsSourceExtensionPattern="\.js$" JsTargetExtension=".min.js" />
+    <Frappe.Tasks.CopyMostRecentCreationAndLastWriteTimeToFiles FromFiles="%(JavaScriptFiles.Identity)" ToFiles="%(JavaScriptFiles.OutputFile)" />
   </Target>
 </Project>
