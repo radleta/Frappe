@@ -10,7 +10,7 @@
     <projectUrl>http://radleta.github.com/Frappe</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The ASP.NET MVC 4 integration with Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</description>
-    <releaseNotes>The initial release candidate.</releaseNotes>
+    <releaseNotes>See: https://github.com/radleta/Frappe/wiki/Release-Notes</releaseNotes>
     <copyright>Copyright 2012 Richard Adleta</copyright>
     <tags>asp-net mvc mvc-4 css js less bundle bundler</tags>
     <references>

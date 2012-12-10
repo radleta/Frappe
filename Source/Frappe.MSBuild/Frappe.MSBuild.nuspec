@@ -10,7 +10,7 @@
     <projectUrl>http://radleta.github.com/Frappe</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The MSBuild targets and tasks to minify and bundle JavaScript, Css, and Less for ASP.NET.</description>
-    <releaseNotes>The initial release candidate.</releaseNotes>
+    <releaseNotes>See: https://github.com/radleta/Frappe/wiki/Release-Notes</releaseNotes>
     <copyright>Copyright 2012 Richard Adleta</copyright>
     <tags>msbuild css js less bundle bundler</tags>
   </metadata>
