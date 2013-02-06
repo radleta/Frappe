@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5986C004
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{402BA3B5-09FF-4E0B-BFAF-C78549B7223E}"
 	ProjectSection(SolutionItems) = preProject
-		README.txt = README.txt
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe", "Frappe\Frappe.csproj", "{01C7A6F0-8DE0-4332-8DD3-0FDE5F27892F}"

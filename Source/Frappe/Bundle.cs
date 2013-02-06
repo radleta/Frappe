@@ -23,7 +23,7 @@ namespace Frappe
         /// Matches the extension of the bundle.
         /// </summary>
         private static Regex BundleFileRegex = new Regex(@"(?'Name'.+?)(?'TypeExt'\.(?:css|js))(?:\.bundle)$", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        
+                        
         /// <summary>
         /// Gets the urls to the bundle for the <c>context</c>.
         /// </summary>
@@ -191,5 +191,37 @@ namespace Frappe
         [XmlElement("Include", Type = typeof(Include))]
         [XmlElement("Bundle", Type = typeof(BundleInclude))]
         public List<Include> Includes { get; set; }
+
+        /// <summary>
+        /// Get the output file for the bundle.
+        /// </summary>
+        /// <returns>The output file for the bundle.</returns>
+        public string GetOutputFile()
+        {
+            if (File == null)
+            {
+                throw new ArgumentNullException("File");
+            }
+            else if (File == string.Empty)
+            {
+                throw new ArgumentOutOfRangeException("File", "Value cannot be empty.");
+            }
+
+            if (string.IsNullOrWhiteSpace(OutputFile))
+            {
+                return BundleFileRegex.Replace(File, @"${Name}.min${TypeExt}");
+            }
+            else
+            {
+                if (Path.IsPathRooted(OutputFile))
+                {
+                    return OutputFile;
+                }
+                else
+                {
+                    return Path.Combine(Path.GetDirectoryName(Path.GetFullPath(File)), OutputFile);
+                }
+            }
+        }
     }
 }

@@ -19,7 +19,5 @@
     <file src="uninstall.ps1" target="tools" />
     <file src="Frappe.targets" target="tools" />
     <file src="bin\$configuration$\*" exclude="bin\$configuration$\Frappe.MSBuild.*" target="tools" />
-    <file src="..\packages\AjaxMin.4.74.4698.25434\tools\net40\**" target="tools\AjaxMin" />
-    <file src="..\Packages\dotless.1.3.1.0\tool\**" target="tools\dotLess" />
   </files>
 </package>

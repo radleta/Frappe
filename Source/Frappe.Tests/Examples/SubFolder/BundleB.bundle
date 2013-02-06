@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Bundle>
-  <Include File="too.css" />
-  <Include File="new.css" />
-  <Include File="chew.css" />
+  <Include File="..\Css\SubFolder\too.css" />
+  <Include File="..\Css\SubFolder\new.css" />
+  <Include File="..\Css\SubFolder\chew.css" />
   <!-- goo.css is a dup from BundleA.bundle -->
-  <Include File="..\goo.css" />
+  <Include File="..\Css\goo.css" />
 </Bundle>

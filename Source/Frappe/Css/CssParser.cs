@@ -21,8 +21,28 @@ namespace Frappe.Css
         /// Gets all the file imports recursively from a css file.
         /// </summary>
         /// <param name="file">A css file.</param>
-        /// <returns></returns>
-        public static IEnumerable<string> GetFileImports(string file, Action<CssImportStatement> missingImportFile = null)
+        /// <returns>The import files found within this css file.</returns>
+        public static IEnumerable<string> GetFileImports(string file)
+        {
+            if (file == null)
+            {
+                throw new ArgumentNullException("file");
+            }
+            else if (file == string.Empty)
+            {
+                throw new ArgumentOutOfRangeException("file", "Value cannot be empty.");
+            }
+
+            return GetFileImports(file, null);
+        }
+
+        /// <summary>
+        /// Gets all the file imports recursively from a css file.
+        /// </summary>
+        /// <param name="file">A css file.</param>
+        /// <param name="missingImportFile">The action to perform when a missing import file is found.</param>
+        /// <returns>The import files found within this css file.</returns>
+        public static IEnumerable<string> GetFileImports(string file, Action<CssImportStatement> missingImportFile)
         {
             if (file == null)
             {

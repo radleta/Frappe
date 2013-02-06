@@ -7,7 +7,7 @@
     <ProjectGuid>{477196D5-A2BB-4460-A64E-79FC4FB6F9EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Frappe</RootNamespace>
+    <RootNamespace>Frappe.MSBuild</RootNamespace>
     <AssemblyName>Frappe.MSBuild</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -30,11 +30,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Build">
-      <Private>False</Private>
+    <Reference Include="AjaxMin">
+      <HintPath>..\packages\AjaxMin.4.81.4769.14860\tools\net40\AjaxMin.dll</HintPath>
     </Reference>
+    <Reference Include="AjaxMinTask">
+      <HintPath>..\packages\AjaxMin.4.81.4769.14860\tools\net40\AjaxMinTask.dll</HintPath>
+    </Reference>
+    <Reference Include="dotless.Core">
+      <HintPath>..\packages\dotless.1.3.1.0\lib\dotless.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\Framework64\v2.0.50727\Microsoft.Build.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Utilities, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\Framework64\v2.0.50727\Microsoft.Build.Utilities.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
@@ -45,11 +59,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tasks\AppendFiles.cs" />
-    <Compile Include="Tasks\BundleFiles.cs" />
-    <Compile Include="Tasks\CopyMostRecentCreationAndLastWriteTimeToFiles.cs" />
-    <Compile Include="Tasks\GetFilesFromBundle.cs" />
+    <Compile Include="MSBuildBundler.cs" />
+    <Compile Include="Tasks\Bundle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\CompilerConfiguration.cs" />
+    <Compile Include="Tasks\dotlessCompiler.cs" />
+    <Compile Include="Tasks\FixImportPathDecorator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Frappe\Frappe.csproj">

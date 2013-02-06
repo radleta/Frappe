@@ -22,15 +22,32 @@ namespace Frappe
             Assert.IsNotNull(files);
 
             var expectedFiles = new List<string>() { 
-                @"Examples\foo.css",
-                @"Examples\goo.css",
-                @"Examples\SubFolder\too.css",
-                @"Examples\SubFolder\new.css",
-                @"Examples\SubFolder\chew.css",
-            }.ConvertAll(s => s.ToLower());
+                @"Examples\css\foo.css",
+                @"Examples\css\goo.css",
+                @"Examples\css\SubFolder\too.css",
+                @"Examples\css\SubFolder\new.css",
+                @"Examples\css\SubFolder\chew.css",
+                @"Examples\Less\Local.less",
+            }.ConvertAll(s => Path.GetFullPath(s).ToLower());
 
-            Assert.AreEqual(expectedFiles, files.ConvertAll(file => file.Replace(Path.GetFullPath(@".\").ToLower(), "")));
+            Assert.AreEqual(expectedFiles, files.Select(f => f.ToLower()));
         }
+
+        //[Test]
+        //public void GetImportFilesTest()
+        //{
+        //    var bundler = new Bundler();
+        //    var importFiles = bundler.GetImportFiles(@"Examples\BundleA.bundle").ToList();
+        //    Assert.IsNotNull(importFiles);
+
+        //    var expectedImportFiles = new List<string>() { 
+        //        @"examples\Less\subfolder\subfolderlocal.less",
+        //        @"examples\Less\include.less",
+        //        @"examples\Less\includeinclude.less"
+        //    }.Select(s => s.ToLower()).ToList();
+
+        //    Assert.AreEqual(expectedImportFiles, importFiles.Select(file => file.Replace(Path.GetFullPath(@".\").ToLower(), "").ToLower()).ToList());
+        //}
 
     }
 }

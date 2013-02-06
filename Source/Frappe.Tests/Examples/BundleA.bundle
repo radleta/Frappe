@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Bundle>
-  <Include File="foo.css" />
-  <Include File="goo.css" />
+  <Include File="Css\foo.css" />
+  <Include File="Css\goo.css" />
   <Bundle File="SubFolder\BundleB.bundle" />
+  <Include File="Less\Local.less" />
 </Bundle>

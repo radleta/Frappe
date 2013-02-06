@@ -7,51 +7,61 @@ using System.Text.RegularExpressions;
 
 namespace Frappe
 {
-    internal class BundleState
-    {
-        public bool Bundled = false;
-        public Bundle Bundle;
-        public List<IncludeState> Includes;
-    }
-
-    internal class IncludeState
-    {
-        public bool Transformed = false;
-        public Bundle Bundle;
-        public Include Include;
-        public string File;
-    }
-
-    public class BundlerOptions
-    {
-    }
-
+    /// <summary>
+    /// The bundler to transform and combine less, js, and css.
+    /// </summary>
     public class Bundler
     {
-        /// <summary>
-        /// Matches a css file.
-        /// </summary>
-        private static readonly Regex CssFileRegex = new Regex(@"\.css$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        #region BundleState class
+
+        protected class BundleState
+        {
+            public bool Transformed = false;
+            public bool Bundled = false;
+            public Bundle Bundle;
+            public FileInfo BundleFile;
+            public FileInfo BundleOutputFile;
+            public List<IncludeState> Includes;
+        }
+
+        #endregion
+
+        #region IncludeState class
+
+        protected class IncludeState
+        {
+            public bool Transformed = false;
+            public Include Include;
+            public FileInfo File;
+            public FileInfo OutputFile;
+            public List<string> Imports;
+        }
+
+        #endregion
 
         /// <summary>
-        /// Matches a js file.
+        /// Initializes a new instance of this class.
         /// </summary>
-        private static readonly Regex JsFileRegex = new Regex(@"\.js$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        /// <param name="options">Optional. The options for the bundler.</param>
+        public Bundler(BundlerOptions options = null)
+        {
+            Options = options ?? new BundlerOptions();
+        }
 
         /// <summary>
-        /// Matches a less file.
+        /// The options for the bundler.
         /// </summary>
-        private static readonly Regex LessFileRegex = new Regex(@"\.less$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        public BundlerOptions Options { get; set; }
 
         /// <summary>
-        /// The bundles loaded by thier file lower case.
-        /// </summary>
-        private Dictionary<string, Bundle> BundleByFileLower;
-
-        /// <summary>
-        /// The bundles already processed by this bundler.
+        /// The state of the bundles.
         /// </summary>        
-        private Dictionary<string, BundleState> BundleStateByFileLower;
+        private Dictionary<string, BundleState> BundleStateByFile;
+
+        /// <summary>
+        /// The state of the includes.
+        /// </summary>
+        private Dictionary<string, IncludeState> IncludeStateByFile;
 
         #region ImportFileNotFound Event
 
@@ -59,7 +69,7 @@ namespace Frappe
 
         public event ImportFileNotFoundDelegate ImportFileNotFound;
 
-        protected void OnImportFileNotFound(string file, string importFile, string importFileNotFound, string statement)
+        protected virtual void OnImportFileNotFound(string file, string importFile, string importFileNotFound, string statement)
         {
             if (ImportFileNotFound != null)
             {
@@ -75,7 +85,7 @@ namespace Frappe
 
         public event FileBundledDelegate FileBundled;
 
-        protected void OnFileBundled(string outputFile, string file)
+        protected virtual void OnFileBundled(string outputFile, string file)
         {
             if (FileBundled != null)
             {
@@ -85,39 +95,215 @@ namespace Frappe
 
         #endregion
 
+        /// <summary>
+        /// Compiles a Less file into Css.
+        /// </summary>
+        /// <param name="lessFile">The less file.</param>
+        /// <param name="outputCssFile">The output css file.</param>
+        protected virtual void CompileLess(string lessFile, string outputCssFile)
+        {
+            throw new NotImplementedException("This method has not been implemented.");
+        }
+
+        /// <summary>
+        /// Minifies the <c>cssFile</c> into the <c>outputMinifiedCssFile</c>.
+        /// </summary>
+        /// <param name="cssFile">The css file.</param>
+        /// <param name="outputMinifiedCssFile">The output minified css file.</param>
+        protected virtual void MinifyCss(string cssFile, string outputMinifiedCssFile)
+        {
+            throw new NotImplementedException("This method has not been implemented.");
+        }
+
+        /// <summary>
+        /// Minifies the <c>javaScriptFile</c> into the <c>outputMinifiedJavaScriptFile</c>.
+        /// </summary>
+        /// <param name="javaScriptFile">The javascript file.</param>
+        /// <param name="outputMinifiedJavaScriptFile">The output minified javascript file.</param>
+        protected virtual void MinifyJavaScript(string javaScriptFile, string outputMinifiedJavaScriptFile)
+        {
+            throw new NotImplementedException("This method has not been implemented.");
+        }
+
+        /// <summary>
+        /// Logs an info message.
+        /// </summary>
+        /// <param name="format">The format string.</param>
+        /// <param name="args">The args for the format.</param>
+        protected virtual void LogInfo(string format, params object[] args)
+        {
+            // ignore; can be overridden by inheriting class to emit the log messages
+        }
+
+        /// <summary>
+        /// Logs a warning message.
+        /// </summary>
+        /// <param name="format">The format string.</param>
+        /// <param name="args">The args for the format.</param>
+        protected virtual void LogWarning(string format, params object[] args)
+        {
+            // ignore; can be overridden by inheriting class to emit the log messages
+        }
+
         private void Initialize()
         {
             // reset state
-            BundleByFileLower = new Dictionary<string, Frappe.Bundle>();
-            BundleStateByFileLower = new Dictionary<string, BundleState>();
+            BundleStateByFile = new Dictionary<string, BundleState>(StringComparer.InvariantCultureIgnoreCase);
+            IncludeStateByFile = new Dictionary<string, IncludeState>(StringComparer.InvariantCultureIgnoreCase);
         }
 
-        public void Bundle(string outputFile, bool overwrite, IEnumerable<string> files)
+        public void Bundle(string bundleFile)
         {
-            try
-            {
-                this.Initialize();
+            this.Initialize();
 
-                if (overwrite)
+            // open the bundle
+            var bundle = Frappe.Bundle.Load(bundleFile);
+
+            Bundle(bundle);
+        }
+
+        public void Bundle(IEnumerable<string> bundleFiles)
+        {
+            this.Initialize();
+
+            foreach (var bundleFile in bundleFiles)
+            {
+                // open the bundle
+                var bundle = Frappe.Bundle.Load(bundleFile);
+
+                Bundle(bundle);
+            }
+        }
+
+        private void Bundle(Bundle bundle)
+        {
+            if (bundle == null)
+            {
+                throw new System.ArgumentNullException("bundle");
+            }
+
+            // put the bundle into the state
+            var bundleState = CreateBundleState(bundle);
+
+            if (!bundleState.Bundled)
+            {
+                LogInfo("Ensuring the bundle \"{0}\" is up-to-date.", bundleState.BundleFile);
+
+                // transform all includes
+                foreach (var include in bundleState.Includes)
                 {
-                    // clear the file
-                    File.WriteAllText(outputFile, "");
+                    Transform(include);
                 }
 
-                foreach (var file in files)
+                // transform the bundle
+                Transform(bundleState);
+
+                // mark the bundle as bundled
+                bundleState.Bundled = true;
+            }
+        }
+
+        public IEnumerable<string> GetFiles(string bundleFile)
+        {
+            this.Initialize();
+
+            var bundleState = GetOrCreateBundleState(bundleFile);
+            return bundleState.Includes.Select(i => i.File.FullName);
+        }
+
+        public IEnumerable<string> GetAllIncludeImportFiles(string bundle)
+        {
+            this.Initialize();
+
+            return GetOrCreateBundleState(bundle).Includes
+                .SelectMany(i => i.Imports)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        private void Transform(BundleState bundle)
+        {
+            if (bundle.Transformed)
+            {
+                // IF we've already transformed this file
+                // THEN bail
+
+                return;
+            }
+            else if (bundle.Includes.Count == 0)
+            {
+                // IF nothing to do
+                // THEN mark it as transformed and bail
+
+                bundle.Transformed = true;
+                return;
+            }
+
+            // find the most recent date from all the includes
+            var inputMostRecentLastWriteTimeUtc = bundle.Includes
+                .Select(include => include.OutputFile.LastAccessTimeUtc)
+                .OrderByDescending(d => d)
+                .First();
+
+            // get the output file
+            var outputFile = bundle.BundleOutputFile;
+
+            // determine whether or not the bundle needs to be transformed
+            if (!outputFile.Exists || outputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
+            {
+                // IF the output file does NOT exist
+                //   OR the last write time of the output file is less than the input most recent last write time
+                // THEN we need to transform this bundle
+
+                LogInfo("The output \"{0}\" for bundle \"{1}\" does not exist or is out-of-date.", bundle.BundleOutputFile, bundle.BundleFile);
+
+                // concat the bundle together to create the output file
+                ConcatBundle(bundle);
+
+                // refresh the file now
+                outputFile.Refresh();
+
+                // set the last write time utc to the input because the output is based on the inputs
+                outputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
+
+                LogInfo("The output \"{0}\" for bundle \"{1}\" has been updated.", bundle.BundleOutputFile, bundle.BundleFile);
+            }
+
+            bundle.Transformed = true;
+        }
+
+        private void ConcatBundle(BundleState bundle)
+        {
+            if (bundle == null)
+            {
+                throw new System.ArgumentNullException("bundle");
+            }
+
+            var outputFileInfo = bundle.BundleOutputFile;
+            var outputFile = outputFileInfo.FullName;
+            var includeFileInfos = bundle.Includes.Select(include => include.OutputFile).ToList();
+
+            try
+            {
+
+                // clear the output file
+                File.WriteAllText(outputFile, "");
+
+                // concat all the output of the includes together
+                foreach (var includeFileInfo in includeFileInfos)
                 {
+                    var file = includeFileInfo.FullName;
                     try
                     {
-                        if (CssFileRegex.IsMatch(file)
-                        || LessFileRegex.IsMatch(file))
+                        if (FileExtension.IsCss(file)
+                            || FileExtension.IsLess(file))
                         {
                             var css = Css.CssParser.GetCss(file, true, import =>
                             {
-                                OnImportFileNotFound(file, import.File, import.ImportFile, import.Statement);
+                                LogWarning("An import file could not be found. File: {0}, RelativeTo: {1}, Import: {2}, Statement: {3}", file, import.File, import.ImportFile, import.Statement);
                             });
 
                             // fix the relative paths
-                            css = Css.CssParser.UpdateRelativePaths(css, Path.GetDirectoryName(file), Path.GetDirectoryName(outputFile));
+                            css = Css.CssParser.UpdateRelativePaths(css, includeFileInfo.DirectoryName, outputFileInfo.DirectoryName);
 
                             // append the css to the file
                             File.AppendAllText(outputFile, css);
@@ -137,45 +323,105 @@ namespace Frappe
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Failed to create bundle output. An error occurred trying to create the bundle output. OutputFile: {0}, Files: {1}", outputFile, string.Join(", ", files.Where(s => s != null).Select(s => string.Format("\"{0}\"", s)))), ex);
+                throw new ApplicationException(string.Format("Failed to create bundle output. An error occurred trying to create the bundle output. OutputFile: {0}, Files: {1}", outputFile, string.Join(", ", includeFileInfos.Where(s => s != null).Select(s => string.Format("\"{0}\"", s)))), ex);
             }
         }
 
-        public IEnumerable<string> GetFiles(string bundle)
+        private void Transform(IncludeState include)
         {
-            this.Initialize();
-
-            var bundleState = GetOrCreateBundleState(bundle);
-            foreach (var includeFile in bundleState.Includes.Select(i => i.File.ToLower()).Distinct())
+            if (include.Transformed)
             {
-                yield return includeFile;
+                // IF we've already transformed this file
+                // THEN bail
+
+                return;
             }
-        }
 
-        public IEnumerable<string> GetImportFiles(string bundle)
-        {
-            this.Initialize();
+            LogInfo("Ensuring the include \"{0}\" is up-to-date.", include.File.FullName);
 
-            var bundleState = GetOrCreateBundleState(bundle);
-            foreach (var include in bundleState.Includes)
+            // what are the input files
+            var inputFiles = new List<FileInfo>();
+            inputFiles.Add(include.File);
+            inputFiles.AddRange(include.Imports.Select(s => new FileInfo(s)));
+            
+            // what is the most recent last write time utc
+            var inputMostRecentLastWriteTimeUtc = inputFiles.Select(f => f.LastWriteTimeUtc)
+                .OrderByDescending(d => d)
+                .First();
+                        
+            FileInfo inputFile = include.File;
+            if (FileExtension.IsLess(include.File.FullName))
             {
-                if (CssFileRegex.IsMatch(include.File)
-                    || LessFileRegex.IsMatch(include.File))
+                // IF it's a less file
+                // THEN we need to create the css output file
+
+                inputFile = new FileInfo(include.File.FullName + ".css");
+                if (!inputFile.Exists || inputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
                 {
-                    foreach (var importFile in Css.CssParser.GetFileImports(include.File))
-                    {
-                        yield return importFile;
-                    }
+                    // IF the input file doesn't exist
+                    //   OR the file is older than any of the inputs
+                    // THEN re-compile the less file
+
+                    LogInfo("The css output \"{0}\" for less include \"{1}\" does not exist or is out-of-date.", inputFile, include.File.FullName);
+
+                    // compile the less file
+                    this.CompileLess(include.File.FullName, inputFile.FullName);
+
+                    // refresh the input file
+                    inputFile.Refresh();
+
+                    // set the file last write time to match the inputs since it's generated based on them
+                    inputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
+
+                    LogInfo("The css output \"{0}\" for less include \"{1}\" has been updated.", inputFile, include.File.FullName);
                 }
             }
-        }
 
+            // do they exist and are they up-to-date relative to the outputs?
+            var outputFile = include.OutputFile;
+
+            // tranform the include
+            if (!outputFile.Exists || outputFile.LastWriteTimeUtc < inputFile.LastWriteTimeUtc)
+            {
+                // IF the output file does NOT exist
+                //   OR the output file is out-of-date
+                // THEN rebuild the output file
+
+                LogInfo("The minified output \"{0}\" for include \"{1}\" does not exist or is out-of-date.", outputFile, inputFile);
+
+                if (FileExtension.IsCss(inputFile.FullName))
+                {
+                    MinifyCss(inputFile.FullName, outputFile.FullName);
+                }
+                else if (FileExtension.IsJavaScript(inputFile.FullName))
+                {
+                    MinifyJavaScript(inputFile.FullName, outputFile.FullName);
+                }
+                else
+                {
+                    throw new NotImplementedException(string.Format("Transformation of file has not been implemented. File: {0}", inputFile.FullName));
+                }
+
+                // update the output file
+                outputFile.Refresh();
+
+                // set the file last write time to match the input since it's generated based on it
+                outputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
+
+                LogInfo("The minified output \"{0}\" for include \"{1}\" has been updated.", outputFile, inputFile);
+            }
+
+            // update the state
+            include.Transformed = true;
+            include.OutputFile = outputFile;
+        }
+                
         private BundleState GetOrCreateBundleState(string bundleFile)
         {
-            var bundleFileFullLower = Path.GetFullPath(bundleFile).ToLower();
+            var bundleFileFullPath = Path.GetFullPath(bundleFile);
             BundleState state;
             // check to see if this bundle is already bundled
-            if (BundleStateByFileLower.TryGetValue(bundleFileFullLower, out state))
+            if (BundleStateByFile.TryGetValue(bundleFileFullPath, out state))
             {
                 // IF we've already bundled this bundle
                 // THEN return it's state
@@ -183,30 +429,69 @@ namespace Frappe
             }
             // we need to create the state and return
             state = CreateBundleState(bundleFile);
-            BundleStateByFileLower.Add(bundleFile, state);
+            BundleStateByFile.Add(bundleFileFullPath, state);
             return state;
-        }
-
-        private Bundle GetOrLoadBundle(string bundleFile)
-        {
-            var bundleFileFullLower = Path.GetFullPath(bundleFile).ToLower();
-            Bundle bundle;
-            if (BundleByFileLower.TryGetValue(bundleFileFullLower, out bundle))
-            {
-                return bundle;
-            }
-            bundle = Frappe.Bundle.Load(bundleFileFullLower);
-            BundleByFileLower.Add(bundleFileFullLower, bundle);
-            return bundle;
         }
 
         private BundleState CreateBundleState(string bundleFile)
         {
-            var bundle = GetOrLoadBundle(bundleFile);
+            var bundle = Frappe.Bundle.Load(bundleFile);
+            return CreateBundleState(bundle);
+        }
+
+        private BundleState CreateBundleState(Bundle bundle)
+        {
+            var includes = GetIncludeStates(bundle).ToList();
+
             return new BundleState()
             {
                 Bundle = bundle,
-                Includes = GetIncludes(bundle).ToList(),
+                BundleFile = new FileInfo(bundle.File),
+                BundleOutputFile = new FileInfo(bundle.GetOutputFile()),
+                Includes = includes,
+            };
+        }
+
+        public string EnsureFileRooted(string bundleFileDirectory, string file)
+        {
+            if (bundleFileDirectory == null)
+            {
+                throw new ArgumentNullException("bundleFileDirectory");
+            }
+            else if (bundleFileDirectory == string.Empty)
+            {
+                throw new ArgumentOutOfRangeException("bundleFileDirectory", "Value cannot be empty.");
+            }
+
+            if (file == null)
+            {
+                throw new ArgumentNullException("file");
+            }
+            else if (file == string.Empty)
+            {
+                throw new ArgumentOutOfRangeException("file", "Value cannot be empty.");
+            }
+
+            if (!Path.IsPathRooted(file))
+            {
+                return Path.GetFullPath(Path.Combine(bundleFileDirectory, file));
+            }
+            return file;
+        }
+
+        private IncludeState CreateIncludeState(string bundleFileDirectory, Include include)
+        {
+            var includeFileFullPath = new FileInfo(EnsureFileRooted(bundleFileDirectory, include.File));
+
+            return new IncludeState()
+            {
+                File = includeFileFullPath,
+                Include = include,
+                Imports = Include.GetImportFiles(includeFileFullPath.FullName)
+                    .Select(s => EnsureFileRooted(includeFileFullPath.Directory.FullName, s))
+                    .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                    .ToList(),
+                OutputFile = new FileInfo(EnsureFileRooted(bundleFileDirectory, include.GetOutputFile())),
             };
         }
 
@@ -214,26 +499,14 @@ namespace Frappe
         /// Gets the underlying files included in this bundle.
         /// </summary>
         /// <returns>The files from the bundle and any inner bundles.</returns>
-        private IEnumerable<IncludeState> GetIncludes(Bundle bundle)
+        private List<IncludeState> GetIncludeStates(Bundle bundle)
         {
-            // filesLower is hashset of files in lower case to ensure no dups
-            var filesLower = new HashSet<string>();
-            // files is the result original case and in order of load
-            var files = new List<string>();
-            if (bundle.Includes != null)
+            var includeStatesByFile = new Dictionary<string, IncludeState>(StringComparer.InvariantCultureIgnoreCase);
+            var includes = bundle.Includes;
+            if (includes != null)
             {
-                var bundleDirectory = Path.GetDirectoryName(bundle.File);
-                var getRootedFile = new Func<string, string>(file =>
-                {
-                    if (!Path.IsPathRooted(file))
-                    {
-                        file = Path.GetFullPath(Path.Combine(bundleDirectory, file));
-                    }
-                    return file;
-                });
-
-                var bundlesLower = new HashSet<string>();
-                foreach (var include in bundle.Includes)
+                string bundleFileDirectory = Path.GetDirectoryName(Path.GetFullPath(bundle.File));
+                foreach (var include in includes)
                 {
                     if (include is BundleInclude)
                     {
@@ -241,39 +514,30 @@ namespace Frappe
                         // THEN we need to get all it's files
 
                         var bundleInclude = (BundleInclude)include;
-                        var bundleIncludeFile = getRootedFile(bundleInclude.File);
-                        var bundleIncludeFileLower = bundleIncludeFile.ToLower();
-                        if (bundlesLower.Contains(bundleIncludeFileLower))
-                        {
-                            // IF we already have it
-                            // THEN we can skip loading it
-                            // BECAUSE we don't do recursive loading of bundles
-                            continue;
-                        }
-                        else
-                        {
-                            bundlesLower.Add(bundleIncludeFileLower);
-                        }
-
-                        var includeBundleState = GetOrCreateBundleState(bundleIncludeFile);
+                        var includeBundleFile = EnsureFileRooted(bundleFileDirectory, bundleInclude.File);
+                        var includeBundleState = GetOrCreateBundleState(includeBundleFile);
                         foreach (var includeBundleInclude in includeBundleState.Includes)
                         {
-                            yield return includeBundleInclude;
+                            if (!includeStatesByFile.ContainsKey(includeBundleInclude.File.FullName))
+                            {
+                                includeStatesByFile.Add(includeBundleInclude.File.FullName, includeBundleInclude);
+                            }
                         }
                     }
                     else
                     {
                         // ELSE just add this include
 
-                        yield return new IncludeState()
+                        var includeFile = EnsureFileRooted(bundleFileDirectory, include.File);
+                        if (!includeStatesByFile.ContainsKey(includeFile))
                         {
-                            File = getRootedFile(include.File),
-                            Bundle = bundle,
-                            Include = include,
-                        };
+                            includeStatesByFile.Add(includeFile, CreateIncludeState(bundleFileDirectory, include));
+                        }
                     }
                 }
             }
+            return includeStatesByFile.Values.ToList();
         }
+
     }
 }

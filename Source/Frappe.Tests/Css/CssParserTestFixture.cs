@@ -40,6 +40,21 @@ namespace Frappe.Css
         }
 
         /// <summary>
+        /// Test for <see cref="CssParser.GetFileImports"/> method.
+        /// </summary>
+        [Test]
+        public void GetFileImportsLessTest()
+        {
+            var expectedFileImports = new List<string>() { 
+                @"Examples\Less\SubFolder\SubFolderLocal.less", 
+                @"Examples\Less\Include.less", 
+                @"Examples\Less\IncludeInclude.less"
+            };
+            var actualFileImports = CssParser.GetFileImports(@"Examples\Less\Local.less").ToList();
+            Assert.AreEqual(expectedFileImports, actualFileImports);
+        }
+        
+        /// <summary>
         /// Test for <see cref="CssParser.GetCss"/> method.
         /// </summary>
         [Test]
