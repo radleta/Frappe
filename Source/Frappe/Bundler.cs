@@ -240,7 +240,7 @@ namespace Frappe
 
             // find the most recent date from all the includes
             var inputMostRecentLastWriteTimeUtc = bundle.Includes
-                .Select(include => include.OutputFile.LastAccessTimeUtc)
+                .Select(include => include.OutputFile.LastWriteTimeUtc)
                 .OrderByDescending(d => d)
                 .First();
 
