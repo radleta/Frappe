@@ -181,25 +181,31 @@ namespace Frappe
             {
                 throw new System.ArgumentNullException("bundle");
             }
-
-            // put the bundle into the state
-            var bundleState = CreateBundleState(bundle);
-
-            if (!bundleState.Bundled)
+            try
             {
-                LogInfo("Ensuring the bundle \"{0}\" is up-to-date.", bundleState.BundleFile);
+                // put the bundle into the state
+                var bundleState = CreateBundleState(bundle);
 
-                // transform all includes
-                foreach (var include in bundleState.Includes)
+                if (!bundleState.Bundled)
                 {
-                    Transform(include);
+                    LogInfo("Ensuring the bundle \"{0}\" is up-to-date.", bundleState.BundleFile);
+
+                    // transform all includes
+                    foreach (var include in bundleState.Includes)
+                    {
+                        Transform(include);
+                    }
+
+                    // transform the bundle
+                    Transform(bundleState);
+
+                    // mark the bundle as bundled
+                    bundleState.Bundled = true;
                 }
-
-                // transform the bundle
-                Transform(bundleState);
-
-                // mark the bundle as bundled
-                bundleState.Bundled = true;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(string.Format("An error occurred while bundling a bundle file. Bundle File: {0}", bundle.File), ex);
             }
         }
 
@@ -329,91 +335,104 @@ namespace Frappe
 
         private void Transform(IncludeState include)
         {
-            if (include.Transformed)
+            if (include == null)
             {
-                // IF we've already transformed this file
-                // THEN bail
-
-                return;
+                throw new System.ArgumentNullException("include");
             }
 
-            LogInfo("Ensuring the include \"{0}\" is up-to-date.", include.File.FullName);
-
-            // what are the input files
-            var inputFiles = new List<FileInfo>();
-            inputFiles.Add(include.File);
-            inputFiles.AddRange(include.Imports.Select(s => new FileInfo(s)));
-            
-            // what is the most recent last write time utc
-            var inputMostRecentLastWriteTimeUtc = inputFiles.Select(f => f.LastWriteTimeUtc)
-                .OrderByDescending(d => d)
-                .First();
-                        
-            FileInfo inputFile = include.File;
-            if (FileExtension.IsLess(include.File.FullName))
+            try
             {
-                // IF it's a less file
-                // THEN we need to create the css output file
 
-                inputFile = new FileInfo(include.File.FullName + ".css");
-                if (!inputFile.Exists || inputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
+                if (include.Transformed)
                 {
-                    // IF the input file doesn't exist
-                    //   OR the file is older than any of the inputs
-                    // THEN re-compile the less file
+                    // IF we've already transformed this file
+                    // THEN bail
 
-                    LogInfo("The css output \"{0}\" for less include \"{1}\" does not exist or is out-of-date.", inputFile, include.File.FullName);
-
-                    // compile the less file
-                    this.CompileLess(include.File.FullName, inputFile.FullName);
-
-                    // refresh the input file
-                    inputFile.Refresh();
-
-                    // set the file last write time to match the inputs since it's generated based on them
-                    inputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
-
-                    LogInfo("The css output \"{0}\" for less include \"{1}\" has been updated.", inputFile, include.File.FullName);
+                    return;
                 }
+
+                LogInfo("Ensuring the include \"{0}\" is up-to-date.", include.File.FullName);
+
+                // what are the input files
+                var inputFiles = new List<FileInfo>();
+                inputFiles.Add(include.File);
+                inputFiles.AddRange(include.Imports.Select(s => new FileInfo(s)));
+
+                // what is the most recent last write time utc
+                var inputMostRecentLastWriteTimeUtc = inputFiles.Select(f => f.LastWriteTimeUtc)
+                    .OrderByDescending(d => d)
+                    .First();
+
+                FileInfo inputFile = include.File;
+                if (FileExtension.IsLess(include.File.FullName))
+                {
+                    // IF it's a less file
+                    // THEN we need to create the css output file
+
+                    inputFile = new FileInfo(include.File.FullName + ".css");
+                    if (!inputFile.Exists || inputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
+                    {
+                        // IF the input file doesn't exist
+                        //   OR the file is older than any of the inputs
+                        // THEN re-compile the less file
+
+                        LogInfo("The css output \"{0}\" for less include \"{1}\" does not exist or is out-of-date.", inputFile, include.File.FullName);
+
+                        // compile the less file
+                        this.CompileLess(include.File.FullName, inputFile.FullName);
+
+                        // refresh the input file
+                        inputFile.Refresh();
+
+                        // set the file last write time to match the inputs since it's generated based on them
+                        inputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
+
+                        LogInfo("The css output \"{0}\" for less include \"{1}\" has been updated.", inputFile, include.File.FullName);
+                    }
+                }
+
+                // do they exist and are they up-to-date relative to the outputs?
+                var outputFile = include.OutputFile;
+
+                // tranform the include
+                if (!outputFile.Exists || outputFile.LastWriteTimeUtc < inputFile.LastWriteTimeUtc)
+                {
+                    // IF the output file does NOT exist
+                    //   OR the output file is out-of-date
+                    // THEN rebuild the output file
+
+                    LogInfo("The minified output \"{0}\" for include \"{1}\" does not exist or is out-of-date.", outputFile, inputFile);
+
+                    if (FileExtension.IsCss(inputFile.FullName))
+                    {
+                        MinifyCss(inputFile.FullName, outputFile.FullName);
+                    }
+                    else if (FileExtension.IsJavaScript(inputFile.FullName))
+                    {
+                        MinifyJavaScript(inputFile.FullName, outputFile.FullName);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException(string.Format("Transformation of file has not been implemented. File: {0}", inputFile.FullName));
+                    }
+
+                    // update the output file
+                    outputFile.Refresh();
+
+                    // set the file last write time to match the input since it's generated based on it
+                    outputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
+
+                    LogInfo("The minified output \"{0}\" for include \"{1}\" has been updated.", outputFile, inputFile);
+                }
+
+                // update the state
+                include.Transformed = true;
+                include.OutputFile = outputFile;
             }
-
-            // do they exist and are they up-to-date relative to the outputs?
-            var outputFile = include.OutputFile;
-
-            // tranform the include
-            if (!outputFile.Exists || outputFile.LastWriteTimeUtc < inputFile.LastWriteTimeUtc)
+            catch (Exception ex)
             {
-                // IF the output file does NOT exist
-                //   OR the output file is out-of-date
-                // THEN rebuild the output file
-
-                LogInfo("The minified output \"{0}\" for include \"{1}\" does not exist or is out-of-date.", outputFile, inputFile);
-
-                if (FileExtension.IsCss(inputFile.FullName))
-                {
-                    MinifyCss(inputFile.FullName, outputFile.FullName);
-                }
-                else if (FileExtension.IsJavaScript(inputFile.FullName))
-                {
-                    MinifyJavaScript(inputFile.FullName, outputFile.FullName);
-                }
-                else
-                {
-                    throw new NotImplementedException(string.Format("Transformation of file has not been implemented. File: {0}", inputFile.FullName));
-                }
-
-                // update the output file
-                outputFile.Refresh();
-
-                // set the file last write time to match the input since it's generated based on it
-                outputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
-
-                LogInfo("The minified output \"{0}\" for include \"{1}\" has been updated.", outputFile, inputFile);
+                throw new ApplicationException(string.Format("An error occurred trying to transform bundle include. Include File: {0}", include.File), ex);
             }
-
-            // update the state
-            include.Transformed = true;
-            include.OutputFile = outputFile;
         }
                 
         private BundleState GetOrCreateBundleState(string bundleFile)

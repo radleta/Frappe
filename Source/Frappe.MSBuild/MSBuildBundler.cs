@@ -56,19 +56,43 @@ namespace Frappe.MSBuild
         protected override void MinifyCss(string cssFile, string outputMinifiedCssFile)
         {
             var ajaxMinTask = new AjaxMin();
+            ajaxMinTask.TreatWarningsAsErrors = true;
             ajaxMinTask.BuildEngine = this.Task.BuildEngine;
             ajaxMinTask.CssSourceFiles = new ITaskItem[] { new TaskItem(cssFile) };
             ajaxMinTask.CssCombinedFileName = outputMinifiedCssFile;
-            ajaxMinTask.Execute();
+            if (ajaxMinTask.Execute())
+            {
+                // IF success
+                // THEN do nothing
+            }
+            else
+            {
+                // ELSE failure
+                // THEN raise an error
+                                
+                throw new ApplicationException(string.Format("An error occurred trying to minify css file. Css File: {0}", cssFile));
+            }
         }
 
         protected override void MinifyJavaScript(string javaScriptFile, string outputMinifiedJavaScriptFile)
         {
             var ajaxMinTask = new AjaxMin();
+            ajaxMinTask.TreatWarningsAsErrors = true;
             ajaxMinTask.BuildEngine = this.Task.BuildEngine;
             ajaxMinTask.JsSourceFiles = new ITaskItem[] { new TaskItem(javaScriptFile) };
             ajaxMinTask.JsCombinedFileName = outputMinifiedJavaScriptFile;
-            ajaxMinTask.Execute();
+            if (ajaxMinTask.Execute())
+            {
+                // IF success
+                // THEN do nothing
+            }
+            else
+            {
+                // ELSE failure
+                // THEN raise an error
+
+                throw new ApplicationException(string.Format("An error occurred trying to minify JavaScript file. JavaScript File: {0}", javaScriptFile, outputMinifiedJavaScriptFile));
+            }
         }
     }
 }
