@@ -188,8 +188,6 @@ namespace Frappe
 
                 if (!bundleState.Bundled)
                 {
-                    LogInfo("Ensuring the bundle \"{0}\" is up-to-date.", bundleState.BundleFile);
-
                     // transform all includes
                     foreach (var include in bundleState.Includes)
                     {
@@ -243,10 +241,17 @@ namespace Frappe
                 bundle.Transformed = true;
                 return;
             }
+            
+            LogInfo("Ensuring the bundle \"{0}\" is up-to-date.", bundle.BundleFile);
 
-            // find the most recent date from all the includes
-            var inputMostRecentLastWriteTimeUtc = bundle.Includes
-                .Select(include => include.OutputFile.LastWriteTimeUtc)
+            // what are the input files
+            var inputFiles = new List<FileInfo>();
+            inputFiles.Add(bundle.BundleFile);
+            inputFiles.AddRange(bundle.Includes.Select(s => s.OutputFile));
+
+            // find the most recent date from all the includes and the bundle file itself
+            var inputMostRecentLastWriteTimeUtc = inputFiles
+                .Select(f => f.LastWriteTimeUtc)
                 .OrderByDescending(d => d)
                 .First();
 

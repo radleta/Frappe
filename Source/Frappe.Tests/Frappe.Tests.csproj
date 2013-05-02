@@ -52,6 +52,7 @@
     <Compile Include="BundlerTestFixture.cs" />
     <Compile Include="BundleTestFixture.cs" />
     <Compile Include="Css\CssParserTestFixture.cs" />
+    <Compile Include="NUnitBundler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

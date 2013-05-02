@@ -33,7 +33,15 @@
 	
     <Exec Command="..\.nuget\nuget pack -Tool -Properties Configuration=Release -OutputDirectory &quot;$(OutputDir)&quot;" WorkingDirectory="Frappe.MSBuild\" />
 
-    <Exec Command="..\.nuget\nuget pack -Properties Configuration=Release -OutputDirectory &quot;$(OutputDir)&quot;" WorkingDirectory="Frappe.Mvc4\" />
+    <GetAssemblyIdentity AssemblyFiles="Frappe.MSBuild\bin\Release\Frappe.MSBuild.dll">
+      <Output TaskParameter="Assemblies" ItemName="FrappeMSBuildAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <PropertyGroup>
+      <BeyondAssemblyVersion>%(FrappeMSBuildAssemblyInfo.Version)</BeyondAssemblyVersion>
+    </PropertyGroup>
+    <Message Text="FrappeMSBuildAssemblyInfo: $(FrappeMSBuildAssemblyInfo)" />
+    
+    <Exec Command="..\.nuget\nuget pack -Properties Configuration=Release -OutputDirectory &quot;$(OutputDir)&quot; -Properties FrappeMSBuildVersion=$(FrappeMSBuildAssemblyInfo)" WorkingDirectory="Frappe.Mvc4\" />
 
   </Target>
 

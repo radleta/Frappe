@@ -159,6 +159,19 @@ namespace Frappe
         }
 
         /// <summary>
+        /// Serializes the <c>bundle</c> into a <c>file</c>.
+        /// </summary>
+        /// <param name="bundle">The bundle to serialize.</param>
+        /// <param name="file">The file to store the serialized <c>bundle</c>.</param>
+        internal static void Serialize(Bundle bundle, string file)
+        {
+            using (var writer = System.IO.File.Create(file))
+            {
+                Serializer.Serialize(writer, bundle);
+            }
+        }
+
+        /// <summary>
         /// Deserializes the <c>xml</c> into a <c>bundle</c>.
         /// </summary>
         /// <param name="xml">The xml of the bundle.</param>
