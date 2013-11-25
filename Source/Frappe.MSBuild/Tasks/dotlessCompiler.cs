@@ -19,9 +19,55 @@ namespace Frappe.MSBuild.Tasks
     /// <remarks>
     /// A port of the dotLess.compiler into MSBuild.
     /// </remarks>
-    public class dotlessCompiler : Task
+    public class dotlessCompiler : Task, dotless.Core.Loggers.ILogger
     {
-        
+
+        /// <summary>
+        /// A <see cref="ContainerFactory"/> implementation to support overrides to the default
+        /// to expose the functionality of the <see cref="dotlessCompiler"/> to the <see cref="Engine"/>.
+        /// </summary>
+        /// <remarks>The primary purpose of this class is to provide the <see cref="dotlessCompiler"/> as 
+        /// the <see cref="dotless.Core.Loggers.ILogger"/> to send log messages to msbuild when compiling less files.</remarks>
+        public class dotlessCompilerContainerFactory : dotless.Core.ContainerFactory
+        {
+            /// <summary>
+            /// Initializes a new instance of this class.
+            /// </summary>
+            /// <param name="compiler">The <see cref="dotlessCompiler"/> to use when registering services.</param>
+            public dotlessCompilerContainerFactory(dotlessCompiler compiler) : base()
+            {
+                if (compiler == null)
+                {
+                    throw new System.ArgumentNullException("compiler");
+                }
+
+                this.Compiler = compiler;
+            }
+
+            /// <summary>
+            /// The <see cref="dotlessCompiler"/> to use when registering services.
+            /// </summary>
+            protected dotlessCompiler Compiler { get; private set; }
+
+            /// <summary>
+            /// Provides our own implementation of the services.
+            /// </summary>
+            /// <param name="pandora">The IoC instance.</param>
+            /// <param name="configuration">The dotless configuration.</param>
+            protected override void OverrideServices(Pandora.Fluent.FluentRegistration pandora, DotlessConfiguration configuration)
+            {
+                base.OverrideServices(pandora, configuration);
+
+                if (configuration.Logger == null)
+                {
+                    // IF no logger defined 
+                    // THEN we're going to use the Compiler as the logger to stream output out
+
+                    pandora.Service<dotless.Core.Loggers.ILogger>().Instance(Compiler);
+                }
+            }
+        }
+
         /// <summary>
         /// The input arguments for the task.
         /// </summary>
@@ -125,7 +171,8 @@ namespace Frappe.MSBuild.Tasks
             }
             
             var engineFactory = new EngineFactory(configuration);
-            var engine = engineFactory.GetEngine();
+            var containerFactory = new dotlessCompilerContainerFactory(this);
+            var engine = engineFactory.GetEngine(containerFactory);
             foreach (var filename in filenames)
             {
                 var inputFile = new FileInfo(filename);
@@ -287,8 +334,12 @@ namespace Frappe.MSBuild.Tasks
 
         private CompilerConfiguration GetConfigurationFromArguments(List<string> arguments)
         {
-            var configuration = new CompilerConfiguration(DotlessConfiguration.GetDefault());
+            var dotLessConfig = DotlessConfiguration.GetDefault();
+            dotLessConfig.LogLevel = dotless.Core.Loggers.LogLevel.Warn;
+            dotLessConfig.Logger = typeof(dotless.Core.Loggers.ConsoleLogger);
 
+            var configuration = new CompilerConfiguration(dotLessConfig);
+            
             foreach (var arg in arguments)
             {
                 if (arg.StartsWith("-"))
@@ -404,5 +455,71 @@ namespace Frappe.MSBuild.Tasks
             arguments.RemoveAll(p => p.StartsWith("-"));
             return configuration;
         }
+
+        #region dotless.Core.Loggers.ILogger Implementation
+
+        void dotless.Core.Loggers.ILogger.Debug(string message, params object[] args)
+        {
+            this.Log.LogMessage(MessageImportance.Low, message, args);
+        }
+
+        void dotless.Core.Loggers.ILogger.Debug(string message)
+        {
+            this.Log.LogMessage(MessageImportance.Low, message);
+        }
+
+        void dotless.Core.Loggers.ILogger.Error(string message, params object[] args)
+        {
+            this.Log.LogError(message, args);
+        }
+
+        void dotless.Core.Loggers.ILogger.Error(string message)
+        {
+            this.Log.LogError(message);
+        }
+
+        void dotless.Core.Loggers.ILogger.Info(string message, params object[] args)
+        {
+            this.Log.LogMessage(MessageImportance.Normal, message, args);
+        }
+
+        void dotless.Core.Loggers.ILogger.Info(string message)
+        {
+            this.Log.LogMessage(MessageImportance.Normal, message);
+        }
+
+        void dotless.Core.Loggers.ILogger.Log(dotless.Core.Loggers.LogLevel level, string message)
+        {
+            var logger = (dotless.Core.Loggers.ILogger)this;
+            switch (level)
+            {
+                case dotless.Core.Loggers.LogLevel.Error:
+                    logger.Error(message);
+                    break;
+                case dotless.Core.Loggers.LogLevel.Warn:
+                    logger.Warn(message);
+                    break;
+                case dotless.Core.Loggers.LogLevel.Info:
+                    logger.Info(message);
+                    break;
+                case dotless.Core.Loggers.LogLevel.Debug:
+                    logger.Debug(message);
+                    break;
+                default:
+                    throw new NotImplementedException(string.Format("The LogLevel has not been implemented. LogLevel: {0}", level));
+            }
+        }
+
+        void dotless.Core.Loggers.ILogger.Warn(string message, params object[] args)
+        {
+            this.Log.LogWarning(message, args);
+        }
+
+        void dotless.Core.Loggers.ILogger.Warn(string message)
+        {
+            this.Log.LogWarning(message);
+        }
+        
+        #endregion
     }
 }

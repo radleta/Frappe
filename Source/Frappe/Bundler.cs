@@ -254,12 +254,12 @@ namespace Frappe
                 .Select(f => f.LastWriteTimeUtc)
                 .OrderByDescending(d => d)
                 .First();
-
+            
             // get the output file
             var outputFile = bundle.BundleOutputFile;
 
             // determine whether or not the bundle needs to be transformed
-            if (!outputFile.Exists || outputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
+            if (!outputFile.Exists || outputFile.Length == 0 || outputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
             {
                 // IF the output file does NOT exist
                 //   OR the last write time of the output file is less than the input most recent last write time
@@ -375,7 +375,7 @@ namespace Frappe
                     // THEN we need to create the css output file
 
                     inputFile = new FileInfo(include.File.FullName + ".css");
-                    if (!inputFile.Exists || inputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
+                    if (!inputFile.Exists || inputFile.Length == 0 || inputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
                     {
                         // IF the input file doesn't exist
                         //   OR the file is older than any of the inputs
@@ -400,7 +400,7 @@ namespace Frappe
                 var outputFile = include.OutputFile;
 
                 // tranform the include
-                if (!outputFile.Exists || outputFile.LastWriteTimeUtc < inputFile.LastWriteTimeUtc)
+                if (!outputFile.Exists || outputFile.Length == 0 || outputFile.LastWriteTimeUtc < inputFile.LastWriteTimeUtc)
                 {
                     // IF the output file does NOT exist
                     //   OR the output file is out-of-date
