@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <projectUrl>http://radleta.github.com/Frappe</projectUrl>
+    <projectUrl>http://www.github.com/radleta/Frappe</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The ASP.NET MVC 4 integration with Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</description>
     <releaseNotes>See the project wiki on github for release notes.</releaseNotes>

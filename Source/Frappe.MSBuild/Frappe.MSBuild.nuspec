@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <projectUrl>http://radleta.github.com/Frappe</projectUrl>
+    <projectUrl>http://www.github.com/radleta/Frappe</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The MSBuild targets and tasks to minify and bundle JavaScript, Css, and Less for ASP.NET.</description>
     <releaseNotes>See the project wiki on github for release notes.</releaseNotes>
