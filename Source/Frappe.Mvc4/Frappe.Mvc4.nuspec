@@ -23,8 +23,5 @@
   </metadata>
   <files>
     <file src="bin\$configuration$\*" target="lib\net40" />
-    <file src="Views\Web.config.transform" target="content\Views" />
-    <file src="Web.config.transform" target="content" />
-    <file src="Web.Release.config.transform" target="content" />
   </files>
 </package>

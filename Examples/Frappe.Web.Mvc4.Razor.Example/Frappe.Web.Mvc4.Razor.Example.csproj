@@ -42,13 +42,13 @@
     <Reference Include="AjaxMin">
       <HintPath>..\packages\AjaxMin.5.3.5068.16463\lib\net40\AjaxMin.dll</HintPath>
     </Reference>
-    <Reference Include="Frappe, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Frappe, Version=1.3.5.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Frappe.Mvc4.1.3.4.0\lib\net40\Frappe.dll</HintPath>
+      <HintPath>..\packages\Frappe.Mvc4.1.3.5.3\lib\net40\Frappe.dll</HintPath>
     </Reference>
-    <Reference Include="Frappe.Mvc4, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Frappe.Mvc4, Version=1.3.5.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Frappe.Mvc4.1.3.4.0\lib\net40\Frappe.Mvc4.dll</HintPath>
+      <HintPath>..\packages\Frappe.Mvc4.1.3.5.3\lib\net40\Frappe.Mvc4.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -141,7 +141,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Bundles\README.txt" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\css\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\css\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\css\bootstrap.css" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\css\bootstrap.min.css" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\js\bootstrap.js" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\js\bootstrap.min.js" />
     <Content Include="Content\Utility.less" />
+    <Content Include="App_Bundles\Bootstrap.css.bundle" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\bootstrap-3.0.3-dist\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="App_Bundles\Bootstrap.js.bundle">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Content\Global.less" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -274,7 +288,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\Frappe.MSBuild.1.3.4.0\tools\Frappe.targets" />
+  <Import Project="..\packages\Frappe.MSBuild.1.3.5.3\tools\Frappe.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

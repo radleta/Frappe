@@ -106,6 +106,16 @@ namespace Frappe
         }
 
         /// <summary>
+        /// Compiles a *.js.html file into JavaScript.
+        /// </summary>
+        /// <param name="jsHtmlFile">The input html file.</param>
+        /// <param name="outputJSFile">The output javascript file.</param>
+        protected virtual void CompileJsHtml(string jsHtmlFile, string outputJSFile)
+        {
+            throw new NotImplementedException("This method has not been implemented.");
+        }
+
+        /// <summary>
         /// Minifies the <c>cssFile</c> into the <c>outputMinifiedCssFile</c>.
         /// </summary>
         /// <param name="cssFile">The css file.</param>
@@ -224,6 +234,11 @@ namespace Frappe
                 .Distinct(StringComparer.InvariantCultureIgnoreCase);
         }
 
+        /// <summary>
+        /// The executing assembly file.
+        /// </summary>
+        private static readonly FileInfo ExecutingAssemblyFile = new System.IO.FileInfo(new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).AbsolutePath);
+
         private void Transform(BundleState bundle)
         {
             if (bundle.Transformed)
@@ -252,6 +267,12 @@ namespace Frappe
             // find the most recent date from all the includes and the bundle file itself
             var inputMostRecentLastWriteTimeUtc = inputFiles
                 .Select(f => f.LastWriteTimeUtc)
+                // add the frappe lib as a last write utc source so the
+                // output will be updated when frappe is published to fix
+                // bugs and improve the output
+                .Concat(new [] {  
+                    ExecutingAssemblyFile.LastWriteTimeUtc
+                })
                 .OrderByDescending(d => d)
                 .First();
             
@@ -365,6 +386,12 @@ namespace Frappe
 
                 // what is the most recent last write time utc
                 var inputMostRecentLastWriteTimeUtc = inputFiles.Select(f => f.LastWriteTimeUtc)
+                    // add the frappe lib as a last write utc source so the
+                    // output will be updated when frappe is published to fix
+                    // bugs and improve the output
+                    .Concat(new[] {  
+                        ExecutingAssemblyFile.LastWriteTimeUtc
+                    })
                     .OrderByDescending(d => d)
                     .First();
 
@@ -393,6 +420,30 @@ namespace Frappe
                         inputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
 
                         LogInfo("The css output \"{0}\" for less include \"{1}\" has been updated.", inputFile, include.File.FullName);
+                    }
+                }
+                else if (FileExtension.IsJsHtml(include.File.FullName))
+                {
+                    // remove the .html from the file name so it becomes name.js
+                    inputFile = new FileInfo(include.File.FullName + ".js");
+                    if (!inputFile.Exists || inputFile.Length == 0 || inputFile.LastWriteTimeUtc < inputMostRecentLastWriteTimeUtc)
+                    {
+                        // IF the input file doesn't exist
+                        //   OR the file is older than any of the inputs
+                        // THEN re-compile the less file
+
+                        LogInfo("The javascript output \"{0}\" for js.html include \"{1}\" does not exist or is out-of-date.", inputFile, include.File.FullName);
+
+                        // compile the js.html file
+                        this.CompileJsHtml(include.File.FullName, inputFile.FullName);
+
+                        // refresh the input file
+                        inputFile.Refresh();
+
+                        // set the file last write time to match the inputs since it's generated based on them
+                        inputFile.LastWriteTimeUtc = inputMostRecentLastWriteTimeUtc;
+
+                        LogInfo("The javascript output \"{0}\" for js.html include \"{1}\" has been updated.", inputFile, include.File.FullName);
                     }
                 }
 
@@ -506,7 +557,7 @@ namespace Frappe
         private IncludeState CreateIncludeState(string bundleFileDirectory, Include include)
         {
             var includeFileFullPath = new FileInfo(EnsureFileRooted(bundleFileDirectory, include.File));
-
+            var outputFile = new FileInfo(EnsureFileRooted(bundleFileDirectory, include.GetOutputFile()));
             return new IncludeState()
             {
                 File = includeFileFullPath,
@@ -515,7 +566,10 @@ namespace Frappe
                     .Select(s => EnsureFileRooted(includeFileFullPath.Directory.FullName, s))
                     .Distinct(StringComparer.InvariantCultureIgnoreCase)
                     .ToList(),
-                OutputFile = new FileInfo(EnsureFileRooted(bundleFileDirectory, include.GetOutputFile())),
+                OutputFile = outputFile,
+                // IF the include and output files are the same 
+                // THEN the output is already transformed
+                Transformed = (includeFileFullPath == outputFile),
             };
         }
 

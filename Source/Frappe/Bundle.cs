@@ -46,6 +46,35 @@ namespace Frappe
                 throw new System.IO.FileNotFoundException("The bundle file could not be found. The bundle file must exist.", bundleFile);
             }
 
+            // build the root url
+            var rootUrl = "";
+            if (Settings.Default.AbsolutePath
+                || !string.IsNullOrWhiteSpace(Settings.Default.CdnHostName))
+            {
+                // IF path should be absolute
+                //   OR we are using a CDN
+                // THEN we're always going to return an absolute url
+
+                if (isSecureRequest)
+                {
+                    rootUrl = "https://";
+                }
+                else
+                {
+                    rootUrl = "http://";
+                }
+
+                // determine whether or not to append the cdn host name
+                if (!string.IsNullOrWhiteSpace(Settings.Default.CdnHostName))
+                {
+                    rootUrl += Settings.Default.CdnHostName;
+                }
+                else
+                {
+                    rootUrl += context.Request.Url.Host;
+                }
+            }
+
             if (Settings.Default.BundleOutput)
             {
                 // get the output file
@@ -58,25 +87,7 @@ namespace Frappe
                 }
 
                 // create the url to the bundle output file
-
-                string bundleOutputUrl = string.Empty;
-
-                // determine whether or not to append the cdn host name
-                if (!string.IsNullOrWhiteSpace(Settings.Default.CdnHostName))
-                {
-                    if (isSecureRequest)
-                    {
-                        bundleOutputUrl += "https://";
-                    }
-                    else
-                    {
-                        bundleOutputUrl += "http://";
-                    }
-
-                    bundleOutputUrl += Settings.Default.CdnHostName;
-                }
-
-                bundleOutputUrl += VirtualPathUtility.ToAbsolute(bundleOutput + "?v=" + System.IO.File.GetLastWriteTimeUtc(bundleOutputFile).ToString("yyyyMMddHHmmssfff"));
+                var bundleOutputUrl = rootUrl + VirtualPathUtility.ToAbsolute(bundleOutput + "?v=" + System.IO.File.GetLastWriteTimeUtc(bundleOutputFile).ToString("yyyyMMddHHmmssfff"));
 
                 urls.Add(bundleOutputUrl);                
             }
@@ -84,7 +95,8 @@ namespace Frappe
             {
                 var bundler = new Bundler();
                 var webRootDir = server.MapPath("~/").ToLower();
-                var webRootUrl = VirtualPathUtility.ToAbsolute("/");
+                var webRootUrlPath = VirtualPathUtility.ToAbsolute("/");
+                
                 foreach (var includeFile in bundler.GetFiles(bundleFile))
                 {
                     if (!System.IO.File.Exists(includeFile))
@@ -93,28 +105,7 @@ namespace Frappe
                     }
 
                     // create the url to the include file
-                    string includeUrl;
-
-                    // determine whether or not to append the cdn host name
-                    if (!string.IsNullOrWhiteSpace(Settings.Default.CdnHostName))
-                    {
-                        if (isSecureRequest)
-                        {
-                            includeUrl = "https://";
-                        }
-                        else
-                        {
-                            includeUrl = "http://";
-                        }
-
-                        includeUrl += Settings.Default.CdnHostName;
-                    }
-                    else
-                    {
-                        includeUrl = string.Empty;
-                    }
-
-                    includeUrl += webRootUrl + includeFile.ToLower().Replace(webRootDir, "").Replace("\\", "/") + "?v=" + System.IO.File.GetLastWriteTimeUtc(includeFile).ToString("yyyyMMddHHmmssfff");
+                    var includeUrl = rootUrl + webRootUrlPath + includeFile.ToLower().Replace(webRootDir, "").Replace("\\", "/") + "?v=" + System.IO.File.GetLastWriteTimeUtc(includeFile).ToString("yyyyMMddHHmmssfff");
 
                     urls.Add(includeUrl);
                 }

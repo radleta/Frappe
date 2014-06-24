@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Bundle>
+  <Include File="..\Content\bootstrap-3.0.3-dist\dist\css\bootstrap.min.css" />
+  <Include File="..\Content\bootstrap-3.0.3-dist\dist\css\bootstrap-theme.min.css" />
+</Bundle>

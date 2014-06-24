@@ -41,6 +41,10 @@
     <Reference Include="dotless.Core">
       <HintPath>..\Libs\dotless\dotless.Core.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlToJavaScript, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\HtmlToJavaScript.1.0.0.1\lib\net35\HtmlToJavaScript.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

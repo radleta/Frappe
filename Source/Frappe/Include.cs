@@ -63,11 +63,22 @@ namespace Frappe
             if (string.IsNullOrWhiteSpace(OutputFile))
             {
                 string inputFile = File;
-                if (FileExtension.IsLess(inputFile))
+                if (FileExtension.IsMinified(inputFile))
                 {
-                    inputFile += ".css";
+                    return inputFile;
                 }
-                return IncludeFileRegex.Replace(inputFile, @"${Name}.min${TypeExt}");
+                else
+                {
+                    if (FileExtension.IsLess(inputFile))
+                    {
+                        inputFile += ".css";
+                    }
+                    else if (FileExtension.IsJsHtml(inputFile))
+                    {
+                        inputFile += ".js";
+                    }
+                    return IncludeFileRegex.Replace(inputFile, @"${Name}.min${TypeExt}");
+                }
             }
             else
             {

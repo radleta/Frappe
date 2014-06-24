@@ -76,37 +76,56 @@ namespace Frappe.Css
         /// Test for <see cref="CssParser.UpdateRelativePaths"/> method.
         /// </summary>
         [Test]
-        public void UpdateRelativePathsTest()
+        public void UpdateRelativePathsLessTest()
         {
-            string exampleCssFile = @"Examples\Css\PathUpdate.css";
-            var css = CssParser.UpdateRelativePaths(System.IO.File.ReadAllText(exampleCssFile), System.IO.Path.GetDirectoryName(exampleCssFile), @"..\..\bundles");
-            Assert.AreEqual(new List<string>() {
-                "../bin/" + Configuration +"/Examples/Css/double-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Css/Images/double-quote.jpg",
-                "../bin/" + Configuration +"/Examples/double-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Images/double-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Css/single-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Css/Images/single-quote.jpg",
-                "../bin/" + Configuration +"/Examples/single-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Images/single-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Css/no-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Css/Images/no-quote.jpg",
-                "../bin/" + Configuration +"/Examples/no-quote.jpg",
-                "../bin/" + Configuration +"/Examples/Images/no-quote.jpg",
-            }, CssParser.GetRelativePaths(css).ToList());
-
             string exampleLessFile = @"Examples\Css\PathUpdate.less";
-            var less = CssParser.UpdateRelativePaths(System.IO.File.ReadAllText(exampleLessFile), System.IO.Path.GetDirectoryName(exampleLessFile), @"..\..\bundles");
+            var sourceLess = System.IO.File.ReadAllText(exampleLessFile);
+            var less = CssParser.UpdateRelativePaths(sourceLess, System.IO.Path.GetDirectoryName(exampleLessFile), @"..\..\bundles");
             Assert.AreEqual(new List<string>() {
                 "../bin/" + Configuration +"/Examples/Css/double-quote.png",
-                "../bin/" + Configuration +"/Examples/Css/Images/double-quote.png",
+                "../bin/" + Configuration +"/Examples/Css/Images/double-quote.png?v=1",
                 "../bin/" + Configuration +"/Examples/double-quote.png",
                 "../bin/" + Configuration +"/Examples/Images/double-quote.png",
                 "../bin/" + Configuration +"/Examples/Css/single-quote.png",
                 "../bin/" + Configuration +"/Examples/Css/Images/single-quote.png",
                 "../bin/" + Configuration +"/Examples/single-quote.png",
-                "../bin/" + Configuration +"/Examples/Images/single-quote.png",
+                "../bin/" + Configuration +"/Examples/Images/single-quote.png?v=1",
             }, CssParser.GetRelativePaths(less).ToList());
         }
+
+        /// <summary>
+        /// Test for <see cref="CssParser.UpdateRelativePaths"/> method.
+        /// </summary>
+        [Test]
+        public void UpdateRelativePathsCssTest()
+        {
+            string exampleCssFile = @"Examples\Css\PathUpdate.css";
+            var css = CssParser.UpdateRelativePaths(System.IO.File.ReadAllText(exampleCssFile), System.IO.Path.GetDirectoryName(exampleCssFile), @"..\..\bundles");
+            Assert.AreEqual(new List<string>() {
+                "../bin/" + Configuration +"/Examples/Css/double-quote.jpg",
+                "../bin/" + Configuration +"/Examples/Css/Images/double-quote.jpg?v=1",
+                "../bin/" + Configuration +"/Examples/double-quote.jpg",
+                "../bin/" + Configuration +"/Examples/Images/double-quote.jpg",
+                "../bin/" + Configuration +"/Examples/Css/single-quote.jpg",
+                "../bin/" + Configuration +"/Examples/Css/Images/single-quote.jpg",
+                "../bin/" + Configuration +"/Examples/single-quote.jpg",
+                "../bin/" + Configuration +"/Examples/Images/single-quote.jpg?v=1",
+                "../bin/" + Configuration +"/Examples/Css/no-quote.jpg",
+                "../bin/" + Configuration +"/Examples/Css/Images/no-quote.jpg",
+                "../bin/" + Configuration +"/Examples/no-quote.jpg",
+                "../bin/" + Configuration +"/Examples/Images/no-quote.jpg?v=1",
+            }, CssParser.GetRelativePaths(css).ToList());
+        }
+
+        //[Test]
+        //public void UpdateRelativePathsTest1()
+        //{
+        //    //string file = @"..\..\..\..\Examples\Frappe.Web.Mvc4.Razor.Example\Content\bootstrap-3.0.3-dist\dist\css\bootstrap.min.css";
+        //    //var paths = CssParser.GetRelativePaths(System.IO.File.ReadAllText(file));
+        //    //foreach (var path in paths)
+        //    //{
+        //    //    Console.WriteLine("Path: {0}", path);
+        //    //}
+        //}
     }
 }

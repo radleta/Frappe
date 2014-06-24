@@ -1,4 +1,8 @@
-﻿.http-image
+﻿.url-agnostic-image
+{
+    background-image: url("//www.google.com/some/path/double-quote.jpg");
+}
+.http-image
 {
     background-image: url("http://www.google.com/some/path/double-quote.jpg");
 }
@@ -12,7 +16,7 @@
 }
 .relative-sub
 {
-    background-image: url("Images/double-quote.jpg");
+    background-image: url("Images/double-quote.jpg?v=1");
 }
 .parent
 {
@@ -28,7 +32,7 @@
 }
 .https-image-single-quote
 {
-    background-image: url('https://www.google.com/some/path/single-quote.jpg');
+    background-image: url('https://www.google.com/some/path/single-quote.jpg?v=1');
 }
 .file-only-single-quote
 {
@@ -44,7 +48,7 @@
 }
 .parent-sub-single-quote
 {
-    background-image: url('../Images/single-quote.jpg');
+    background-image: url('../Images/single-quote.jpg?v=1');
 }
 .http-image-no-quote
 {
@@ -52,7 +56,7 @@
 }
 .https-image-no-quote
 {
-    background-image: url(https://www.google.com/some/path/no-quote.jpg);
+    background-image: url(https://www.google.com/some/path/no-quote.jpg?v=1);
 }
 .file-only-no-quote
 {
@@ -68,5 +72,5 @@
 }
 .parent-sub-no-quote
 {
-    background-image: url(../Images/no-quote.jpg);
+    background-image: url(../Images/no-quote.jpg?v=1);
 }

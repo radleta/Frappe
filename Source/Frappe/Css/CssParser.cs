@@ -122,7 +122,7 @@ namespace Frappe.Css
         /// <summary>
         /// Match paths within the css. Ignores http references and absolute paths.
         /// </summary>
-        private static readonly Regex PathRegex = new Regex(@"(?'Pre'(?'Url'url\([""']?)|[""'])(?!https?://|/)(?'Path'[^""'\n)]*)(?'Post'[""']|\))", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex PathRegex = new Regex(@"(?'Pre'(?'Url'url\([""']?)|@[^ ]+\s+['""])(?!(https?:)?//|/)(?'Path'[^""'\n)]+)(?'Post'[""']?\)|['""];)", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
         /// <summary>
         /// Gets the relative paths from the css.
@@ -181,6 +181,13 @@ namespace Frappe.Css
                             try
                             {
                                 var sourceFile = Path.Combine(sourceDirectoryFull, pathGroup.Value.Replace("/", @"\"));
+                                var sourceFileParts = sourceFile.Split('?');
+                                string sourceQuery = null;
+                                if (sourceFileParts.Length > 1)
+                                {
+                                    sourceFile = sourceFileParts[0];
+                                    sourceQuery = sourceFileParts[1];
+                                }
                                 Uri sourceUri;
                                 if ((urlGroup.Success || File.Exists(sourceFile))
                                     && Uri.TryCreate(sourceFile, UriKind.RelativeOrAbsolute, out sourceUri))
@@ -190,8 +197,12 @@ namespace Frappe.Css
                                     // THEN update the path
                                     // BECAUSE we need to avoid other string literals within the css
 
-                                    var relativeUri = targetUri.MakeRelativeUri(sourceUri);
-                                    css = css.Replace(pathMatch.Value, preGroup.Value + relativeUri.ToString() + postGroup.Value);
+                                    var relativePath = targetUri.MakeRelativeUri(sourceUri).ToString();
+                                    if (!string.IsNullOrWhiteSpace(sourceQuery))
+                                    {
+                                        relativePath += "?" + sourceQuery;
+                                    }
+                                    css = css.Replace(pathMatch.Value, preGroup.Value + relativePath + postGroup.Value);
                                 }
                             }
                             catch (Exception ex)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,6 +44,41 @@ namespace Frappe.MSBuild
         protected override void LogWarning(string format, params object[] args)
         {
             Task.Log.LogWarning(format, args);
+        }
+        
+        /// <summary>
+        /// Compiles a *.js.html file into JavaScript.
+        /// </summary>
+        /// <param name="jsHtmlFile">The input html file.</param>
+        /// <param name="outputJSFile">The output javascript file.</param>
+        protected override void CompileJsHtml(string jsHtmlFile, string outputJSFile)
+        {
+            if (jsHtmlFile == null)
+            {
+                throw new ArgumentNullException("jsHtmlFile");
+            }
+            else if (jsHtmlFile == string.Empty)
+            {
+                throw new ArgumentOutOfRangeException("jsHtmlFile", "Value cannot be empty.");
+            }
+            if (!File.Exists(jsHtmlFile))
+            {
+                throw new FileNotFoundException("Unable to locate the .js.html file.", jsHtmlFile);
+            }
+            // read all the html in
+            var html = File.ReadAllText(jsHtmlFile);
+
+            // create the converter
+            var converter = new HtmlToJavaScript.HtmlConverter();
+
+            // get the name of the html in javascript
+            var name = Path.GetFileName(jsHtmlFile).ToLower();
+
+            // convert the html to js
+            var js = converter.ToJavaScript(name, html);
+            
+            // write the js back to the output file
+            File.WriteAllText(outputJSFile, js);
         }
 
         protected override void CompileLess(string lessFile, string outputCssFile)

@@ -54,7 +54,7 @@ namespace Frappe.Mvc
             var context = helper.ViewContext.HttpContext;
             var isSecureRequest = context.Request.IsSecureConnection;
             var cache = context.Cache;
-            var key = string.Format("Frappe.Mvc_{0}_{1}_{2}_{3}", isSecureRequest, Settings.Default.BundleOutput, Settings.Default.CdnHostName, bundle);
+            var key = string.Format("Frappe.Mvc_{0}_{1}_{2}_{3}_{4}", isSecureRequest, Settings.Default.BundleOutput, Settings.Default.CdnHostName, bundle, context.Request.Url.Host);
             var result = (IHtmlString)cache[key];
             if (result == null)
             {
