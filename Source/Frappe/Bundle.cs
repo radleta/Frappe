@@ -55,7 +55,12 @@ namespace Frappe
                 //   OR we are using a CDN
                 // THEN we're always going to return an absolute url
 
-                if (isSecureRequest)
+                if (Settings.Default.ProtocolRelativeUrl)
+                {
+                    rootUrl = "//";
+                }
+                else if (isSecureRequest
+                    || Settings.Default.ForceSecureUrl)
                 {
                     rootUrl = "https://";
                 }

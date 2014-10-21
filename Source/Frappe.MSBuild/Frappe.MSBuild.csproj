@@ -85,7 +85,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Frappe.MSBuild.nuspec" />
+    <None Include="Frappe.MSBuild.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Install.ps1" />
     <None Include="packages.config" />
     <None Include="Uninstall.ps1" />
