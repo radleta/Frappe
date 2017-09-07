@@ -23,7 +23,12 @@ namespace Frappe
         /// Matches the extension of the bundle.
         /// </summary>
         private static Regex BundleFileRegex = new Regex(@"(?'Name'.+?)(?'TypeExt'\.(?:css|js))(?:\.bundle)$", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
-                        
+
+        /// <summary>
+        /// The cdn path prefix trimmed of whitespace and forward slashes (/).
+        /// </summary>
+        private static readonly string CdnPathPrefixTrimmed = Settings.Default.CdnPathPrefix?.Trim()?.Trim('/');
+
         /// <summary>
         /// Gets the urls to the bundle for the <c>context</c>.
         /// </summary>
@@ -47,7 +52,7 @@ namespace Frappe
             }
 
             // build the root url
-            var rootUrl = "";
+            var rootUrl = new StringBuilder("");
             if (Settings.Default.AbsolutePath
                 || !string.IsNullOrWhiteSpace(Settings.Default.CdnHostName))
             {
@@ -57,26 +62,32 @@ namespace Frappe
 
                 if (Settings.Default.ProtocolRelativeUrl)
                 {
-                    rootUrl = "//";
+                    rootUrl.Append("//");
                 }
                 else if (isSecureRequest
                     || Settings.Default.ForceSecureUrl)
                 {
-                    rootUrl = "https://";
+                    rootUrl.Append("https://");
                 }
                 else
                 {
-                    rootUrl = "http://";
+                    rootUrl.Append("http://");
                 }
 
                 // determine whether or not to append the cdn host name
                 if (!string.IsNullOrWhiteSpace(Settings.Default.CdnHostName))
                 {
-                    rootUrl += Settings.Default.CdnHostName;
+                    rootUrl.Append(Settings.Default.CdnHostName);
                 }
                 else
                 {
-                    rootUrl += context.Request.Url.Host;
+                    rootUrl.Append(context.Request.Url.Host);
+                }
+
+                // determine whether we should prepend the cdn path prefix to the url
+                if (!string.IsNullOrWhiteSpace(CdnPathPrefixTrimmed))
+                {
+                    rootUrl.Append("/").Append(CdnPathPrefixTrimmed);
                 }
             }
 
@@ -91,10 +102,17 @@ namespace Frappe
                     throw new System.IO.FileNotFoundException(string.Format("The output file could not be found. The output file for the bundle must exist. Bundle: {0}", bundleFile), bundleOutputFile);
                 }
 
-                // create the url to the bundle output file
-                var bundleOutputUrl = rootUrl + VirtualPathUtility.ToAbsolute(bundleOutput + "?v=" + System.IO.File.GetLastWriteTimeUtc(bundleOutputFile).ToString("yyyyMMddHHmmssfff"));
+                // append the absolute path
+                rootUrl.Append(VirtualPathUtility.ToAbsolute(bundleOutput));
 
-                urls.Add(bundleOutputUrl);                
+                // determine whether to include the query version for the cdn
+                if (Settings.Default.CdnQueryVersion)
+                {
+                    rootUrl.Append("?v=").Append(System.IO.File.GetLastWriteTimeUtc(bundleOutputFile).ToString("yyyyMMddHHmmssfff"));
+                }
+
+                // create the url to the bundle output file
+                urls.Add(rootUrl.ToString());                
             }
             else
             {

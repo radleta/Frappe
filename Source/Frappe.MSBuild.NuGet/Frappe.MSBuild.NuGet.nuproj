@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Frappe.MSBuild\Frappe.MSBuild.csproj">
+      <PackageDirectory>tools</PackageDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Dependency Include="AjaxMin">
+      <Version>5.3.5068.16458</Version>
+    </Dependency>
+    <Dependency Include="HtmlToJavaScript">
+      <Version>1.0.0.1</Version>
+    </Dependency>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="content\App_Bundles\README.txt" />
+    <Content Include="tools\Frappe.targets" />
+    <Content Include="tools\Install.ps1" />
+    <Content Include="tools\Uninstall.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="content\App_Bundles\" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>259e2113-9fe0-43f9-8a73-384787869f7b</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
+  <PropertyGroup Label="Configuration">
+    <Id>Frappe.MSBuild</Id>
+    <Version></Version>
+    <Title>Frappe.MSBuild</Title>
+    <Authors>Richard Adleta</Authors>
+    <Owners>Richard Adleta</Owners>
+    <Summary>The ASP.NET MVC 4 integration with Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Summary>
+    <Description>The ASP.NET MVC 4 integration with Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Description>
+    <ReleaseNotes>See the project wiki on github for release notes.</ReleaseNotes>
+    <ProjectUrl>http://www.github.com/radleta/Frappe</ProjectUrl>
+    <LicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</LicenseUrl>
+    <Copyright>Copyright © 2012 Richard Adleta</Copyright>
+    <Tags>msbuild css js less bundle bundler</Tags>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VersionDependsOn>$(VersionDependsOn);GetNuPkgVersion</VersionDependsOn>
+  </PropertyGroup>
+  <Target Name="GetNuPkgVersion" DependsOnTargets="GetBuildVersion">
+    <PropertyGroup>
+      <Version>$(NuGetPackageVersion)</Version>
+    </PropertyGroup>
+  </Target>
+  <Target Name="GetBuildVersion">
+    <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)Frappe.MSBuild\bin\$(Configuration)\Frappe.MSBuild.dll">
+      <Output TaskParameter="Assemblies" ItemName="OutputAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <Message Text="NuProj Source Assembly Version: %(OutputAssemblyInfo.Version)" />
+    <CreateProperty Value="%(OutputAssemblyInfo.Version)">
+      <Output TaskParameter="Value" PropertyName="NuGetPackageVersion" />
+    </CreateProperty>
+  </Target>
+  <Import Project="$(NuProjPath)\NuProj.targets" />
+</Project>

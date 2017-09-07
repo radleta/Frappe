@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{5986C004-2BC8-4996-A2DE-8DD134E4E514}"
 	ProjectSection(SolutionItems) = preProject
 		Frappe.proj = Frappe.proj
@@ -18,6 +20,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe.MSBuild", "Frappe.MSBuild\Frappe.MSBuild.csproj", "{477196D5-A2BB-4460-A64E-79FC4FB6F9EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe.Mvc4", "Frappe.Mvc4\Frappe.Mvc4.csproj", "{512D47FD-0351-43AB-AC45-61040AE9B07D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{477196D5-A2BB-4460-A64E-79FC4FB6F9EC} = {477196D5-A2BB-4460-A64E-79FC4FB6F9EC}
+	EndProjectSection
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Frappe.MSBuild.NuGet", "Frappe.MSBuild.NuGet\Frappe.MSBuild.NuGet.nuproj", "{259E2113-9FE0-43F9-8A73-384787869F7B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{477196D5-A2BB-4460-A64E-79FC4FB6F9EC} = {477196D5-A2BB-4460-A64E-79FC4FB6F9EC}
+	EndProjectSection
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Frappe.Mvc4.NuGet", "Frappe.Mvc4.NuGet\Frappe.Mvc4.NuGet.nuproj", "{A7BB954B-3AAE-4C30-BF02-AB89828369D8}"
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Frappe.NuGet", "Frappe.NuGet\Frappe.NuGet.nuproj", "{B77F7B89-0EC2-4359-B260-04C38C3479C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +55,18 @@ Global
 		{512D47FD-0351-43AB-AC45-61040AE9B07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{512D47FD-0351-43AB-AC45-61040AE9B07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{512D47FD-0351-43AB-AC45-61040AE9B07D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{259E2113-9FE0-43F9-8A73-384787869F7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{259E2113-9FE0-43F9-8A73-384787869F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{259E2113-9FE0-43F9-8A73-384787869F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{259E2113-9FE0-43F9-8A73-384787869F7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7BB954B-3AAE-4C30-BF02-AB89828369D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7BB954B-3AAE-4C30-BF02-AB89828369D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7BB954B-3AAE-4C30-BF02-AB89828369D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7BB954B-3AAE-4C30-BF02-AB89828369D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B77F7B89-0EC2-4359-B260-04C38C3479C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B77F7B89-0EC2-4359-B260-04C38C3479C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B77F7B89-0EC2-4359-B260-04C38C3479C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B77F7B89-0EC2-4359-B260-04C38C3479C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

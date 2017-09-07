@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>b77f7b89-0ec2-4359-b260-04c38c3479c7</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
+  <PropertyGroup Label="Configuration">
+    <Id>Frappe</Id>
+    <Version></Version>
+    <Title>Frappe</Title>
+    <Authors>Richard Adleta</Authors>
+    <Owners>Richard Adleta</Owners>
+    <Summary>The core implementation library for Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Summary>
+    <Description>The core implementation library for Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Description>
+    <ReleaseNotes>See the project wiki on github for release notes.</ReleaseNotes>
+    <ProjectUrl>http://www.github.com/radleta/Frappe</ProjectUrl>
+    <LicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</LicenseUrl>
+    <Copyright>Copyright © 2012 Richard Adleta</Copyright>
+    <Tags>asp-net mvc mvc-4 css js less bundle bundler</Tags>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VersionDependsOn>$(VersionDependsOn);GetNuPkgVersion</VersionDependsOn>
+  </PropertyGroup>
+  <Target Name="GetNuPkgVersion" DependsOnTargets="GetBuildVersion">
+    <PropertyGroup>
+      <Version>$(NuGetPackageVersion)</Version>
+    </PropertyGroup>
+  </Target>
+  <Target Name="GetBuildVersion">
+    <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)Frappe\bin\$(Configuration)\Frappe.dll">
+      <Output TaskParameter="Assemblies" ItemName="OutputAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <Message Text="NuProj Source Assembly Version: %(OutputAssemblyInfo.Version)" />
+    <CreateProperty Value="%(OutputAssemblyInfo.Version)">
+      <Output TaskParameter="Value" PropertyName="NuGetPackageVersion" />
+    </CreateProperty>
+  </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\Frappe\Frappe.csproj" />
+  </ItemGroup>
+  <Import Project="$(NuProjPath)\NuProj.targets" />
+</Project>
