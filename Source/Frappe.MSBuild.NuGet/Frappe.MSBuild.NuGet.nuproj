@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="content\App_Bundles\README.txt" />
+    <Content Include="content\App_Sprites\README.txt" />
     <Content Include="tools\Frappe.targets" />
     <Content Include="tools\Install.ps1" />
     <Content Include="tools\Uninstall.ps1" />
@@ -41,7 +42,8 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>Frappe.MSBuild</Id>
-    <Version></Version>
+    <Version>
+    </Version>
     <Title>Frappe.MSBuild</Title>
     <Authors>Richard Adleta</Authors>
     <Owners>Richard Adleta</Owners>

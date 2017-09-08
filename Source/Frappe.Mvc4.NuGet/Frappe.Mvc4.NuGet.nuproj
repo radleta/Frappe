@@ -38,6 +38,9 @@
     <ProjectReference Include="..\Frappe.NuGet\Frappe.NuGet.nuproj" />
     <ProjectReference Include="..\Frappe.Sprites.NuGet\Frappe.Sprites.NuGet.nuproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="content\web.config.transform" />
+  </ItemGroup>
   <PropertyGroup>
     <VersionDependsOn>$(VersionDependsOn);GetNuPkgVersion</VersionDependsOn>
   </PropertyGroup>

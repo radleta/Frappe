@@ -8,10 +8,10 @@
     @Html.CssBundle("~/App_Bundles/Site.css.bundle")
     @*@Scripts.Render("~/bundles/modernizr")*@
     @Html.JavaScriptBundle("~/App_Bundles/modernizr.js.bundle")
+    @RenderSection("Head", false)
 </head>
 <body>
     @RenderBody()
-
     @*@Scripts.Render("~/bundles/jquery")*@
     @Html.JavaScriptBundle("~/App_Bundles/Site.js.bundle")
     @RenderSection("scripts", required: false)

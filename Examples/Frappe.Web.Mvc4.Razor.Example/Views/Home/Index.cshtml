@@ -1,5 +1,21 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
+@section Head {
+    @Frappe.Mvc.Sprite.ImportStylesheet("~/App_Sprites/Example1WithoutSettings")
+    @Frappe.Mvc.Sprite.ImportStylesheet("~/App_Sprites/Example2WithSettings")    
+}
+@section Scripts {
+}
+<h1>Frappe Mvc4 Examples</h1>
 
-<h2>Index</h2>
+<h2>Sprite Examples</h2>
+
+<h3>Example 1 Without Settings</h3>
+@Frappe.Mvc.Sprite.Image("~/App_Sprites/Example1WithoutSettings/cat2.gif")
+@Frappe.Mvc.Sprite.Image("~/App_Sprites/Example1WithoutSettings/cat2.png")
+
+<h3>Example 2 With Settings</h3>
+@Frappe.Mvc.Sprite.Image("~/App_Sprites/Example2WithSettings/cat1.gif")
+@Frappe.Mvc.Sprite.Image("~/App_Sprites/Example2WithSettings/cat2.jpg")
+@Frappe.Mvc.Sprite.Image("~/App_Sprites/Example2WithSettings/cat-ice-cream.png")

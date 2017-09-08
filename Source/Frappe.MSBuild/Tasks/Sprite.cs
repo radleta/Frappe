@@ -36,8 +36,13 @@ namespace Frappe.MSBuild.Tasks
             var directories = SpriteDirectory.ToList().ConvertAll(input => new DirectoryInfo(input.ItemSpec)).ToList();            
             foreach (var directory in directories)
             {
-                this.Log.LogMessage($"Generating sprites. WebSiteRootDirectory: {WebSiteRootDirectory}, SpriteDirectory: {directory}");
+                if (!directory.Exists)
+                {
+                    this.Log.LogMessage($"Sprite directory not found. Skipping sprite generation. WebSiteRootDirectory: {WebSiteRootDirectory}, SpriteDirectory: {directory}");
+                    continue;
+                }
 
+                this.Log.LogMessage($"Generating sprites. WebSiteRootDirectory: {WebSiteRootDirectory}, SpriteDirectory: {directory}");
                 generator.ProcessDirectories(directory.FullName);
             }
             return true;
