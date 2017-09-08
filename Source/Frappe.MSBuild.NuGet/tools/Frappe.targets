@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Bundle" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask TaskName="Frappe.MSBuild.Tasks.Bundle" AssemblyFile="$(MSBuildThisFileDirectory)Frappe.MSBuild.dll" />
+  <UsingTask TaskName="Frappe.MSBuild.Tasks.Sprite" AssemblyFile="$(MSBuildThisFileDirectory)Frappe.MSBuild.dll" />
   <Target Name="Bundle" AfterTargets="AfterBuild">
     <ItemGroup>
       <Bundles Include="$(MSBuildProjectDirectory)\App_Bundles\**\*.bundle" />
     </ItemGroup>
     <Frappe.MSBuild.Tasks.Bundle Bundles="@(Bundles)" />
+    <Frappe.MSBuild.Tasks.Sprite SpriteDirectory="$(MSBuildProjectDirectory)\App_Sprites" WebSiteRootDirectory="$(MSBuildProjectDirectory)" />
   </Target>
 </Project>

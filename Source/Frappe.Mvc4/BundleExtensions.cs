@@ -12,9 +12,9 @@ using System.Text.RegularExpressions;
 namespace Frappe.Mvc
 {
     /// <summary>
-    /// The extensions for the <see cref="HtmlHelper"/>.
+    /// The bundle extensions.
     /// </summary>
-    public static class HtmlHelperExtensions
+    public static class BundleExtensions
     {
         /// <summary>
         /// Emits the html for the css bundle. Should be emitted within the Head of an Html document.

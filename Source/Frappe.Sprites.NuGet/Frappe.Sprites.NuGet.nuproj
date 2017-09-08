@@ -10,34 +10,32 @@
       <Platform>AnyCPU</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Frappe.NuGet\Frappe.NuGet.nuproj" />
+    <ProjectReference Include="..\Frappe.Sprites\Frappe.Sprites.csproj" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>a7bb954b-3aae-4c30-bf02-ab89828369d8</ProjectGuid>
+    <ProjectGuid>026b680e-e55a-4977-9848-d65d0d756be3</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>Frappe.Mvc4</Id>
+    <Id>Frappe.Sprites</Id>
     <Version>
     </Version>
-    <Title>Frappe.Mvc4</Title>
+    <Title>Frappe.Sprites</Title>
     <Authors>Richard Adleta</Authors>
     <Owners>Richard Adleta</Owners>
-    <Summary>The ASP.NET MVC 4 integration with Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Summary>
-    <Description>The ASP.NET MVC 4 integration with Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Description>
+    <Summary>The sprite image library for Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Summary>
+    <Description>The sprite image library for Frappe. Frappe is a compile time bundler for JavaScript, Css, and Less for high volume, high performance ASP.NET sites.</Description>
     <ReleaseNotes>See the project wiki on github for release notes.</ReleaseNotes>
     <ProjectUrl>http://www.github.com/radleta/Frappe</ProjectUrl>
     <LicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</LicenseUrl>
     <Copyright>Copyright © 2012 Richard Adleta</Copyright>
     <Tags>asp-net mvc mvc-4 css js less bundle bundler</Tags>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Frappe.MSBuild.NuGet\Frappe.MSBuild.NuGet.nuproj" />
-    <ProjectReference Include="..\Frappe.Mvc4\Frappe.Mvc4.csproj" />
-    <ProjectReference Include="..\Frappe.NuGet\Frappe.NuGet.nuproj" />
-    <ProjectReference Include="..\Frappe.Sprites.NuGet\Frappe.Sprites.NuGet.nuproj" />
-  </ItemGroup>
   <PropertyGroup>
     <VersionDependsOn>$(VersionDependsOn);GetNuPkgVersion</VersionDependsOn>
   </PropertyGroup>
@@ -47,7 +45,7 @@
     </PropertyGroup>
   </Target>
   <Target Name="GetBuildVersion">
-    <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)Frappe.Mvc4\bin\$(Configuration)\Frappe.Mvc4.dll">
+    <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)Frappe.Sprites\bin\$(Configuration)\Frappe.Sprites.dll">
       <Output TaskParameter="Assemblies" ItemName="OutputAssemblyInfo" />
     </GetAssemblyIdentity>
     <Message Text="NuProj Source Assembly Version: %(OutputAssemblyInfo.Version)" />

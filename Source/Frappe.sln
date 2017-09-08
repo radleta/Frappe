@@ -33,6 +33,10 @@ Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Frappe.Mvc4.NuGet", "Frappe
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Frappe.NuGet", "Frappe.NuGet\Frappe.NuGet.nuproj", "{B77F7B89-0EC2-4359-B260-04C38C3479C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frappe.Sprites", "Frappe.Sprites\Frappe.Sprites.csproj", "{00992821-D617-4A9F-AB13-7CCC6229E92C}"
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Frappe.Sprites.NuGet", "Frappe.Sprites.NuGet\Frappe.Sprites.NuGet.nuproj", "{026B680E-E55A-4977-9848-D65D0D756BE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +71,14 @@ Global
 		{B77F7B89-0EC2-4359-B260-04C38C3479C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B77F7B89-0EC2-4359-B260-04C38C3479C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B77F7B89-0EC2-4359-B260-04C38C3479C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00992821-D617-4A9F-AB13-7CCC6229E92C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00992821-D617-4A9F-AB13-7CCC6229E92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00992821-D617-4A9F-AB13-7CCC6229E92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00992821-D617-4A9F-AB13-7CCC6229E92C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{026B680E-E55A-4977-9848-D65D0D756BE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{026B680E-E55A-4977-9848-D65D0D756BE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{026B680E-E55A-4977-9848-D65D0D756BE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{026B680E-E55A-4977-9848-D65D0D756BE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

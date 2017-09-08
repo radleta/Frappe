@@ -41,6 +41,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.Version.cs" />
     <Compile Include="Bundle.cs" />
     <Compile Include="BundleInclude.cs" />
     <Compile Include="BundleOutputType.cs" />

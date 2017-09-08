@@ -72,12 +72,25 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UrlHelperExtensions.cs" />
+    <Compile Include="..\Frappe\Properties\AssemblyInfo.Version.cs">
+      <Link>Properties\AssemblyInfo.Version.cs</Link>
+    </Compile>
+    <Compile Include="BundleExtensions.cs" />
+    <Compile Include="PreApplicationStartCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprite.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Frappe.Sprites\Frappe.Sprites.csproj">
+      <Project>{00992821-d617-4a9f-ab13-7ccc6229e92c}</Project>
+      <Name>Frappe.Sprites</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Frappe\Frappe.csproj">
       <Project>{01c7a6f0-8de0-4332-8dd3-0fde5f27892f}</Project>
       <Name>Frappe</Name>

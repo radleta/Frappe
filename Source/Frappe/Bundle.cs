@@ -23,12 +23,7 @@ namespace Frappe
         /// Matches the extension of the bundle.
         /// </summary>
         private static Regex BundleFileRegex = new Regex(@"(?'Name'.+?)(?'TypeExt'\.(?:css|js))(?:\.bundle)$", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
-        /// <summary>
-        /// The cdn path prefix trimmed of whitespace and forward slashes (/).
-        /// </summary>
-        private static readonly string CdnPathPrefixTrimmed = Settings.Default.CdnPathPrefix?.Trim()?.Trim('/');
-
+        
         /// <summary>
         /// Gets the urls to the bundle for the <c>context</c>.
         /// </summary>
@@ -85,9 +80,10 @@ namespace Frappe
                 }
 
                 // determine whether we should prepend the cdn path prefix to the url
-                if (!string.IsNullOrWhiteSpace(CdnPathPrefixTrimmed))
+                var cdnPathPrefixTrimmed = Settings.Default.CdnPathPrefix?.Trim()?.Trim('/');
+                if (!string.IsNullOrWhiteSpace(cdnPathPrefixTrimmed))
                 {
-                    rootUrl.Append("/").Append(CdnPathPrefixTrimmed);
+                    rootUrl.Append("/").Append(cdnPathPrefixTrimmed);
                 }
             }
 
